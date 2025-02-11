@@ -8,23 +8,23 @@ import java.util.Objects;
 @Embeddable
 public class RelationId implements Serializable {
 
-    private int user1Id;
-    private int user2Id;
+    private int invitingUserId;
+    private int invitedUserId;
 
-    public int getUser1Id() {
-        return user1Id;
+    public int getInvitingUserId() {
+        return invitingUserId;
     }
 
-    public void setUser1Id(int user1Id) {
-        this.user1Id = user1Id;
+    public void setInvitingUserId(int invitingUserId) {
+        this.invitingUserId = invitingUserId;
     }
 
-    public int getUser2Id() {
-        return user2Id;
+    public int getInvitedUserId() {
+        return invitedUserId;
     }
 
-    public void setUser2Id(int user2Id) {
-        this.user2Id = user2Id;
+    public void setInvitedUserId(int invitedUserId) {
+        this.invitedUserId = invitedUserId;
     }
 
     @Override
@@ -32,11 +32,11 @@ public class RelationId implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
 
         RelationId that = (RelationId) o;
-        return user1Id == that.user1Id && user2Id == that.user2Id;
+        return invitingUserId == that.invitingUserId && invitedUserId == that.invitedUserId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(user1Id, user2Id);
+        return Objects.hash(invitingUserId, invitedUserId);
     }
 }

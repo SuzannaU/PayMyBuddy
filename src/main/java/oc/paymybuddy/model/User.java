@@ -1,10 +1,15 @@
 package oc.paymybuddy.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@JsonIgnoreProperties({"sentTransactions", "receivedTransactions", "invitingRelations", "invitedRelations", "transactions", "relations"})
 @Entity
 @Table(name = "users")
 @DynamicUpdate
@@ -18,41 +23,87 @@ public class User {
     private String password;
     private String email;
     private double balance;
+    //private String role;
+
 
     @OneToMany(
             mappedBy = "sender",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,CascadeType.REFRESH},
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},
             fetch = FetchType.LAZY
     )
-    List<Transaction> sentTransactions;
+    private List<Transaction> sentTransactions;
+
 
     @OneToMany(
             mappedBy = "receiver",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,CascadeType.REFRESH},
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},
             fetch = FetchType.LAZY
     )
-    List<Transaction> receivedTransactions;
+    private List<Transaction> receivedTransactions;
+
 
     @OneToMany(
-            mappedBy = "user1",
+            mappedBy = "invitingUser",
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
-    List<Relation> initiatedRelations;
+    private List<Relation> invitingRelations;
+
 
     @OneToMany(
-            mappedBy = "user2",
+            mappedBy = "invitedUser",
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
-    List<Relation> receivedRelations;
+    private List<Relation> invitedRelations;
+
+
+    public List<Relation> getRelations() {
+        List<Relation> relations = new ArrayList<>();
+        relations.addAll(invitedRelations);
+        relations.addAll(invitingRelations);
+        return relations;
+    }
+
+    public List<Transaction> getTransactions() {
+        List<Transaction> transactions = new ArrayList<>();
+        transactions.addAll(sentTransactions);
+        transactions.addAll(receivedTransactions);
+        return transactions;
+    }
+
+    public void addSentTransactions(Transaction t) {
+        sentTransactions.add(t);
+        t.setSender(this);
+    }
+
+    public void addReceivedTransactions(Transaction t) {
+        receivedTransactions.add(t);
+        t.setReceiver(this);
+    }
+
+    public void addInvitingRelation(Relation r) {
+        invitingRelations.add(r);
+        r.setInvitingUser(this);
+    }
+
+    public void addInvitedTransactions(Relation r) {
+        invitedRelations.add(r);
+        r.setInvitedUser(this);
+    }
+
+    public void removeInvitingRelation(Relation r) {
+        invitingRelations.remove(r);
+        r.setInvitingUser(null);
+    }
+
+    public void removeInvitedTransactions(Relation r) {
+        invitedRelations.remove(r);
+        r.setInvitedUser(null);
+    }
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getUsername() {
@@ -103,19 +154,27 @@ public class User {
         this.receivedTransactions = receivedTransactions;
     }
 
-    public List<Relation> getInitiatedRelations() {
-        return initiatedRelations;
+    public List<Relation> getInvitingRelations() {
+        return invitingRelations;
     }
 
-    public void setInitiatedRelations(List<Relation> initiatedRelations) {
-        this.initiatedRelations = initiatedRelations;
+    public void setInvitingRelations(List<Relation> invitingRelations) {
+        this.invitingRelations = invitingRelations;
     }
 
-    public List<Relation> getReceivedRelations() {
-        return receivedRelations;
+    public List<Relation> getInvitedRelations() {
+        return invitedRelations;
     }
 
-    public void setReceivedRelations(List<Relation> receivedRelations) {
-        this.receivedRelations = receivedRelations;
+    public void setInvitedRelations(List<Relation> invitedRelations) {
+        this.invitedRelations = invitedRelations;
     }
+
+//    public String getRole() {
+//        return role;
+//    }
+//
+//    public void setRole(String role) {
+//        this.role = role;
+//    }
 }
