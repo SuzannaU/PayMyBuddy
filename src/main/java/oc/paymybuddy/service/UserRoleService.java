@@ -1,5 +1,7 @@
 package oc.paymybuddy.service;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import oc.paymybuddy.model.User;
 import oc.paymybuddy.model.UserRole;
 import oc.paymybuddy.model.UserRoleId;
 import oc.paymybuddy.repository.UserRoleRepo;
@@ -21,5 +23,9 @@ public class UserRoleService {
 
     public List<UserRole> getAllUserRoles() {
         return userRoleRepo.findAll();
+    }
+
+    public List<UserRole> getAllUserRolesByUser(User user) {
+        return userRoleRepo.findAllByUser(user);
     }
 }

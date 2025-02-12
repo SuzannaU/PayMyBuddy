@@ -3,10 +3,7 @@ package oc.paymybuddy.controller;
 import oc.paymybuddy.model.*;
 import oc.paymybuddy.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -43,6 +40,11 @@ public class UserController {
     @GetMapping("/users-roles")
     public List<UserRole> getAllUserRoles(){
         return userRoleService.getAllUserRoles();
+    }
+
+    @GetMapping("/user/{id}")
+    public User getUserById(@PathVariable("id") int id){
+        return userService.getUserById(id);
     }
 
     @PostMapping("/register")
