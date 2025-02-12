@@ -25,9 +25,10 @@ CREATE TABLE IF NOT EXISTS `PayMyBuddy`.`users`
     `user_id`  INT          NOT NULL AUTO_INCREMENT,
     `username` VARCHAR(45)  NOT NULL UNIQUE,
     `email`    VARCHAR(200) NOT NULL UNIQUE,
-    `password` VARCHAR(45)  NOT NULL,
+    `password` VARCHAR(100)  NOT NULL,
     `balance`  FLOAT        NULL,
-    PRIMARY KEY (`user_id`),
+    PRIMARY KEY (`user_id`)
+)
     ENGINE = InnoDB;
 
 INSERT INTO `PayMyBuddy`.`users` (`username`, `email`, `password`, `balance`)
@@ -70,6 +71,54 @@ INSERT INTO `PayMyBuddy`.`transactions` (`sender_id`, `receiver_id`, `descriptio
 VALUES (1, 2, 'Payment for lunch', 25.00),
        (2, 3, 'Refund for movie tickets', 15.00),
        (1, 2, 'Shared groceries', 50.00);
+
+
+-- -----------------------------------------------------
+-- Table `PayMyBuddy`.`roles`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `PayMyBuddy`.`roles`;
+
+CREATE TABLE IF NOT EXISTS `PayMyBuddy`.`roles`
+(
+    `role_name` VARCHAR(25) NOT NULL UNIQUE,
+    `role_id`   INT         NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (`role_id`)
+)
+    ENGINE = InnoDB;
+
+INSERT INTO `PayMyBuddy`.`roles` (`role_name`)
+VALUES ('ADMIN'),
+       ('USER');
+
+
+-- -----------------------------------------------------
+-- Table `PayMyBuddy`.`user_role`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `PayMyBuddy`.`user_role`;
+
+CREATE TABLE IF NOT EXISTS `PayMyBuddy`.`user_role`
+(
+    `user_id` INT         NOT NULL,
+    `role`    VARCHAR(25) NOT NULL,
+    PRIMARY KEY (`user_id`, `role`),
+    CONSTRAINT `user_id`
+        FOREIGN KEY (`user_id`)
+            REFERENCES `PayMyBuddy`.`users` (`user_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `role`
+        FOREIGN KEY (`role`)
+            REFERENCES `PayMyBuddy`.`roles` (`role_name`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB;
+
+INSERT INTO `PayMyBuddy`.`user_role` (`user_id`, `role`)
+VALUES (1, 'ADMIN'),
+       (1, 'USER'),
+       (2, 'USER'),
+       (3, 'USER');
 
 -- -----------------------------------------------------
 -- Table `PayMyBuddy`.`user_user`
@@ -118,10 +167,10 @@ CREATE VIEW user_connections_vw AS
 (
 SELECT users.username               AS 'User1',
        users.email                  AS 'User1_email',
-       user_connection1_vw.username AS 'User2',
-       user_connection1_vw.email    AS 'User2_email'
+       user_1connection_vw.username AS 'User2',
+       user_1connection_vw.email    AS 'User2_email'
 from users
-         join user_connection1_vw on users.user_id = user_connection1_vw.user2_id);
+         join user_1connection_vw on users.user_id = user_1connection_vw.user2_id);
 
 
 SET SQL_MODE = @OLD_SQL_MODE;

@@ -14,14 +14,18 @@ public class UserService {
     @Autowired
     UserRepo userRepo;
 
-    private BCryptPasswordEncoder bCryptEncoder = new BCryptPasswordEncoder(10);
+    private final BCryptPasswordEncoder bCryptEncoder = new BCryptPasswordEncoder(10);
 
     public User register(User user) {
         user.setPassword(bCryptEncoder.encode(user.getPassword()));
         return userRepo.save(user);
     }
 
-    public List<User> getUsers(){
+    public User getUserById(Integer id) {
+        return userRepo.findById(id).get();
+    }
+
+    public List<User> getAllUsers() {
         return userRepo.findAll();
     }
 

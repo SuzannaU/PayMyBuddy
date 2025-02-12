@@ -2,6 +2,7 @@ package oc.paymybuddy.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -23,6 +24,7 @@ public class Transaction {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}
     )
     @JoinColumn(name = "sender_id")
+    @JsonManagedReference
     private User sender;
 
     @ManyToOne(
@@ -30,11 +32,13 @@ public class Transaction {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}
     )
     @JoinColumn(name = "receiver_id")
+    @JsonManagedReference
     private User receiver;
 
     private String description;
     private double amount;
 
+    @JsonIgnore
     public List<User> getUsers() {
         List<User> users = new ArrayList<>();
         users.add(sender);

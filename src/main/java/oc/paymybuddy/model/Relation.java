@@ -2,6 +2,7 @@ package oc.paymybuddy.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class Relation {
     )
     @MapsId("invitingUserId")
     @JoinColumn(name = "user1_id")
+    @JsonManagedReference
     private User invitingUser;
 
     @ManyToOne(
@@ -28,8 +30,10 @@ public class Relation {
     )
     @MapsId("invitedUserId")
     @JoinColumn(name = "user2_id")
+    @JsonManagedReference
     private User invitedUser;
 
+    @JsonIgnore
     public List<User> getUsers(){
         List<User> users = new ArrayList<>();
         users.add(invitingUser);

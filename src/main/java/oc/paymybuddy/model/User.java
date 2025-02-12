@@ -1,5 +1,6 @@
 package oc.paymybuddy.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -9,7 +10,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonIgnoreProperties({"sentTransactions", "receivedTransactions", "invitingRelations", "invitedRelations", "transactions", "relations"})
 @Entity
 @Table(name = "users")
 @DynamicUpdate
@@ -23,14 +23,13 @@ public class User {
     private String password;
     private String email;
     private double balance;
-    //private String role;
-
 
     @OneToMany(
             mappedBy = "sender",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},
             fetch = FetchType.LAZY
     )
+    @JsonBackReference
     private List<Transaction> sentTransactions;
 
 
@@ -39,6 +38,7 @@ public class User {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},
             fetch = FetchType.LAZY
     )
+    @JsonBackReference
     private List<Transaction> receivedTransactions;
 
 
@@ -47,6 +47,7 @@ public class User {
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
+    @JsonBackReference
     private List<Relation> invitingRelations;
 
 
@@ -55,9 +56,18 @@ public class User {
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
+    @JsonBackReference
     private List<Relation> invitedRelations;
 
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    @JsonBackReference
+    private List<UserRole> roles;
 
+    @JsonIgnore
     public List<Relation> getRelations() {
         List<Relation> relations = new ArrayList<>();
         relations.addAll(invitedRelations);
@@ -65,6 +75,7 @@ public class User {
         return relations;
     }
 
+    @JsonIgnore
     public List<Transaction> getTransactions() {
         List<Transaction> transactions = new ArrayList<>();
         transactions.addAll(sentTransactions);
@@ -170,11 +181,11 @@ public class User {
         this.invitedRelations = invitedRelations;
     }
 
-//    public String getRole() {
-//        return role;
-//    }
-//
-//    public void setRole(String role) {
-//        this.role = role;
-//    }
+    public List<UserRole> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<UserRole> roles) {
+        this.roles = roles;
+    }
 }
