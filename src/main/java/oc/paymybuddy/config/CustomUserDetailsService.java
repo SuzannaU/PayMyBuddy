@@ -4,8 +4,6 @@ import oc.paymybuddy.model.User;
 import oc.paymybuddy.model.UserRole;
 import oc.paymybuddy.repository.UserRepo;
 import oc.paymybuddy.service.UserRoleService;
-import oc.paymybuddy.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,13 +31,18 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userRepo.findByUsername(username);
-        System.out.println("user from db: " + user.getUsername());
-        System.out.println("password from db: " + user.getPassword());
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                getGrantedAuthorities(user));
+        Optional<User> optUser = userRepo.findByUsername(username);
+        if (optUser.isPresent()) {
+            User user = optUser.get();
+            System.out.println("user from db: " + user.getUsername());
+            System.out.println("password from db: " + user.getPassword());
+            return new org.springframework.security.core.userdetails.User(
+                    user.getUsername(),
+                    user.getPassword(),
+                    getGrantedAuthorities(user));
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
     }
 
     private List<GrantedAuthority> getGrantedAuthorities(User user) {

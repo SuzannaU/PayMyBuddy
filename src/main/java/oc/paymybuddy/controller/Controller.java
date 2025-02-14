@@ -5,7 +5,6 @@ import oc.paymybuddy.model.Relation;
 import oc.paymybuddy.model.Role;
 import oc.paymybuddy.model.Transaction;
 import oc.paymybuddy.model.UserRole;
-import oc.paymybuddy.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,16 +17,6 @@ import java.util.List;
 
 @RestController
 public class Controller {
-    @Autowired
-    UserService userService;
-    @Autowired
-    private RelationService relationService;
-    @Autowired
-    private RoleService roleService;
-    @Autowired
-    private TransactionService transactionService;
-    @Autowired
-    private UserRoleService userRoleService;
 
     @GetMapping("/")
     public String getHome(HttpServletRequest request) {
@@ -52,14 +41,6 @@ public class Controller {
     @GetMapping("/admin")
     public String getAdmin() {
         return "Admin";
-    }
-    @GetMapping("/roles")
-    public List<Role> getAllRoles(){
-        return roleService.getAllRoles();
-    }
-    @GetMapping("/users-roles")
-    public List<UserRole> getAllUserRoles(){
-        return userRoleService.getAllUserRoles();
     }
 
     private StringBuffer getUsernamePasswordLoginInfo(Principal principal) {

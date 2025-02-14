@@ -1,26 +1,21 @@
 package oc.paymybuddy.service;
 
 import oc.paymybuddy.model.User;
-import oc.paymybuddy.model.UserRole;
 import oc.paymybuddy.repository.UserRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
     private UserRepo userRepo;
-    private UserRoleService userRoleService;
 
-    public UserService(UserRepo userRepo, UserRoleService userRoleService) {
+    public UserService(UserRepo userRepo) {
         this.userRepo = userRepo;
-        this.userRoleService = userRoleService;
     }
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
@@ -47,17 +42,34 @@ public class UserService {
         return userRepo.save(user);
     }
 
-    public User updateBalance(User user, double balance) {
-        user.setBalance(balance);
-        return userRepo.save(user);
+    public void updateBalances(User sender, User receiver, double amount) {
+        sender.setBalance(sender.getBalance()-amount);
+        receiver.setBalance(receiver.getBalance()+amount);
+        userRepo.save(sender);
+        userRepo.save(receiver);
+    }
+
+    public User getUserByUsername(String username) {
+        Optional<User> optUser = userRepo.findByUsername(username);
+        if (optUser.isPresent()) {
+            return optUser.get();
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
     }
 
     public int getUserIdByUsername(String username) {
-        return userRepo.findByUsername(username).getId();
+        Optional<User> optUser = userRepo.findByUsername(username);
+        if (optUser.isPresent()) {
+            return optUser.get().getId();
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
     }
 
-
-
+    public boolean isAnExistingUser(String username) {
+        return userRepo.findByUsername(username) != null;
+    }
 
 
     // dev utilities
@@ -65,14 +77,10 @@ public class UserService {
         Optional<User> user = userRepo.findById(id);
         return user.orElse(null);
     }
+
     public List<User> getAllUsers() {
         return userRepo.findAll();
     }
-
-    public User getUserByUsername(String username) {
-        return userRepo.findByUsername(username);
-    }
-
 
 
 }

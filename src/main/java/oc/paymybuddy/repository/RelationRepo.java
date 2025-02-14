@@ -12,6 +12,5 @@ import java.util.List;
 @Repository
 public interface RelationRepo extends JpaRepository<Relation, RelationId> {
 
-    @Query (value="SELECT * FROM user_user WHERE user1_id=?1 OR user2_id=?2", nativeQuery=true)
-    List<Relation> getRelationsByUserId(int user1Id,int user2Id);
+    List<Relation> findAllByInvitingUserOrInvitedUser(User invitingUser, User invitedUser);
 }

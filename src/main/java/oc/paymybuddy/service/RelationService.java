@@ -18,32 +18,24 @@ import java.util.stream.Collectors;
 public class RelationService {
 
     private RelationRepo relationRepo;
-    private UserService userService;
 
-    public RelationService(RelationRepo relationRepo, UserService userService) {
+    public RelationService(RelationRepo relationRepo) {
         this.relationRepo = relationRepo;
-        this.userService = userService;
     }
 
-    public Relation addRelation(Principal principal, User user) {
-        // need to check if user is in db
-        Relation relation = new Relation();
-        relation.setInvitingUser((User) principal);
-        relation.setInvitedUser(user);
-        return relationRepo.save(relation);
+    public Relation addRelation(User invitingUser, User invitedUser) {
+            Relation relation = new Relation();
+            relation.setInvitingUser(invitingUser);
+            relation.setInvitedUser(invitedUser);
+            return relationRepo.save(relation);
     }
 
-    public Set<String> getRelationsUsernames(String username) {
-        int userId = userService.getUserIdByUsername(username);
-        return relationRepo.getRelationsByUserId(userId, userId).stream()
+    public Set<String> getRelationsUsernamesByUser(User user) {
+        return relationRepo.findAllByInvitingUserOrInvitedUser(user, user).stream()
                 .map(r->r.getUsers())
                 .flatMap(Collection::stream)
                 .map(u->u.getUsername())
-                .filter(Predicate.not(s->s.equals(username)))
+                .filter(Predicate.not(s->s.equals(user.getUsername())))
                 .collect(Collectors.toSet());
-    }
-
-    public List<Relation> getAllRelations() {
-        return relationRepo.findAll();
     }
 }

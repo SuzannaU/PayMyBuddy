@@ -5,24 +5,18 @@ import oc.paymybuddy.model.User;
 import oc.paymybuddy.repository.TransactionRepo;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.List;
 
 @Service
 public class TransactionService {
 
     private TransactionRepo transactionRepo;
-    private UserService userService;
 
-    public TransactionService(TransactionRepo transactionRepo, UserService userService) {
+    public TransactionService(TransactionRepo transactionRepo) {
         this.transactionRepo = transactionRepo;
-        this.userService = userService;
     }
 
-    public Transaction transfer(Principal principal, User receiver, String description, double amount){
-        User sender = (User) principal;
-        userService.updateBalance(sender, sender.getBalance() - amount);
-        userService.updateBalance(receiver, receiver.getBalance() + amount);
+    public Transaction addTransaction(User sender, User receiver, String description, double amount) {
         Transaction transaction = new Transaction();
         transaction.setSender(sender);
         transaction.setReceiver(receiver);
@@ -31,20 +25,17 @@ public class TransactionService {
         return transactionRepo.save(transaction);
     }
 
-    public Transaction saveTransaction(Transaction transaction) {
-        return transactionRepo.save(transaction);
-    }
-
-    public List<Transaction> getTransactionsByUsername(String username) {
-        return null;
+    public List<Transaction> getTransactionsByUser(User user) {
+        return transactionRepo.findAllBySenderOrReceiver(user, user);
     }
 
 
     // dev utilities
-    public Transaction getTransactionById(int id){
+    public Transaction getTransactionById(int id) {
         return transactionRepo.findById(id).get();
     }
-    public List<Transaction> getAllTransactions(){
+
+    public List<Transaction> getAllTransactions() {
         return transactionRepo.findAll();
     }
 }

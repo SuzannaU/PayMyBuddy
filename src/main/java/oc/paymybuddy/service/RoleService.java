@@ -10,10 +10,9 @@ import java.util.List;
 @Service
 public class RoleService {
 
-    @Autowired
     private RoleRepo roleRepo;
 
-    public List<Role> getAllRoles() {
-        return roleRepo.findAll();
+    public RoleService(RoleRepo roleRepo) {
+        this.roleRepo = roleRepo;
     }
 }
