@@ -1,7 +1,11 @@
 package oc.paymybuddy.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import oc.paymybuddy.service.UserService;
+import oc.paymybuddy.model.Relation;
+import oc.paymybuddy.model.Role;
+import oc.paymybuddy.model.Transaction;
+import oc.paymybuddy.model.UserRole;
+import oc.paymybuddy.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -10,19 +14,29 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 public class Controller {
     @Autowired
     UserService userService;
+    @Autowired
+    private RelationService relationService;
+    @Autowired
+    private RoleService roleService;
+    @Autowired
+    private TransactionService transactionService;
+    @Autowired
+    private UserRoleService userRoleService;
 
     @GetMapping("/")
-    public String getHome(Principal user) {
+    public String getHome(HttpServletRequest request) {
 
         StringBuffer userInfo = new StringBuffer();
-        if (user instanceof UsernamePasswordAuthenticationToken) {
-            userInfo.append(getUsernamePasswordLoginInfo(user));
-        }
+        //if (principal instanceof UsernamePasswordAuthenticationToken) {
+            userInfo.append(getUsernamePasswordLoginInfo(request.getUserPrincipal()))
+                    .append(request.getUserPrincipal().getName());
+        //}
         return userInfo.toString();
     }
 
@@ -35,35 +49,23 @@ public class Controller {
     public String getTest() {
         return "Test";
     }
-
-    @GetMapping("/error")
-    public String getError() {
-        return "Error";
-    }
-
     @GetMapping("/admin")
     public String getAdmin() {
         return "Admin";
     }
-
-    @GetMapping("/user")
-    public String getUser() {
-        return "User";
+    @GetMapping("/roles")
+    public List<Role> getAllRoles(){
+        return roleService.getAllRoles();
+    }
+    @GetMapping("/users-roles")
+    public List<UserRole> getAllUserRoles(){
+        return userRoleService.getAllUserRoles();
     }
 
-    @GetMapping("/no-role")
-    public String getNoRole() {
-        return "No role";
-    }
-    @PostMapping("/user")
-    public String getPost() {
-        return "Post request";
-    }
-
-    private StringBuffer getUsernamePasswordLoginInfo(Principal user) {
+    private StringBuffer getUsernamePasswordLoginInfo(Principal principal) {
         StringBuffer usernameInfo = new StringBuffer();
 
-        UsernamePasswordAuthenticationToken token = ((UsernamePasswordAuthenticationToken) user);
+        UsernamePasswordAuthenticationToken token = ((UsernamePasswordAuthenticationToken) principal);
         if (token.isAuthenticated()) {
             org.springframework.security.core.userdetails.User u = (org.springframework.security.core.userdetails.User) token.getPrincipal();
             usernameInfo.append("Welcome, " + u.getUsername());

@@ -34,3 +34,4 @@ build/
 
 ### JAR files ###
 .jar
+/config
