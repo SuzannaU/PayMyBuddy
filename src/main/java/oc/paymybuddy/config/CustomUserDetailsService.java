@@ -4,6 +4,8 @@ import oc.paymybuddy.model.User;
 import oc.paymybuddy.model.UserRole;
 import oc.paymybuddy.repository.UserRepo;
 import oc.paymybuddy.service.UserRoleService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
+    private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
     private UserRepo userRepo;
     private UserRoleService userRoleService;
 
@@ -34,8 +37,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         Optional<User> optUser = userRepo.findByUsername(username);
         if (optUser.isPresent()) {
             User user = optUser.get();
-            System.out.println("user from db: " + user.getUsername());
-            System.out.println("password from db: " + user.getPassword());
+            logger.debug("user from db: " + user.getUsername());
+            logger.debug("password from db: " + user.getPassword());
             return new org.springframework.security.core.userdetails.User(
                     user.getUsername(),
                     user.getPassword(),
@@ -60,6 +63,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .map(ur -> ur.getRole())
                 .map(r -> r.getRoleName())
                 .collect(Collectors.toSet());
+        logger.debug("Current user roles: " + roleNames.toString());
         return roleNames;
     }
 }

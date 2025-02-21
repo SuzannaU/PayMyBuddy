@@ -1,7 +1,7 @@
 package oc.paymybuddy.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -11,10 +11,6 @@ import java.util.List;
 public class Role {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id")
-    private int id;
-
     @Column(name = "role_name")
     private String roleName;
 
@@ -23,12 +19,8 @@ public class Role {
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
-    @JsonBackReference
+    @JsonManagedReference("role")
     private List<UserRole> users;
-
-    public int getId() {
-        return id;
-    }
 
     public String getRoleName() {
         return roleName;

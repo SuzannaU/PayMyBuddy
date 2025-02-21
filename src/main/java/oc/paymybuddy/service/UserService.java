@@ -1,7 +1,12 @@
 package oc.paymybuddy.service;
 
+import oc.paymybuddy.exceptions.ExistingEmailException;
+import oc.paymybuddy.exceptions.ExistingUsernameException;
+import oc.paymybuddy.exceptions.TooLongException;
 import oc.paymybuddy.model.User;
 import oc.paymybuddy.repository.UserRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,7 +16,7 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private UserRepo userRepo;
 
     public UserService(UserRepo userRepo) {
@@ -21,32 +26,62 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
 
     public User registerUser(User user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        return userRepo.save(user);
+        if (isAnExistingUsername(user.getUsername())) {
+            throw new ExistingUsernameException();
+        } else if (isAnExistingEmail(user.getEmail())) {
+            throw new ExistingEmailException();
+        } else if (user.getUsername().length() > 45
+                || user.getEmail().length() > 100
+                || user.getPassword().length() > 45) {
+            throw new TooLongException();
+        } else {
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            logger.debug("Encoded Password: " + user.getPassword());
+            return userRepo.save(user);
+        }
     }
 
-    public User updateUsername(User user, String newUsername) {
-        // handle if newUsername already exists
-        user.setUsername(newUsername);
-        return userRepo.save(user);
+    public User updateUsername(User user, String newUsername) throws Exception {
+        if (isAnExistingUsername(newUsername)) {
+            throw new ExistingUsernameException();
+        } else if (newUsername.length() > 45) {
+            throw new TooLongException();
+        } else {
+            user.setUsername(newUsername);
+            logger.debug("Username updated to: "+ user.getUsername());
+            return userRepo.save(user);
+        }
     }
 
-    public User updateEmail(User user, String newEmail) {
-        // handle if newEmail already exists
-        user.setEmail(newEmail);
-        return userRepo.save(user);
+    public User updateEmail(User user, String newEmail) throws Exception {
+        if (isAnExistingEmail(newEmail)) {
+            throw new ExistingEmailException();
+        } else if (newEmail.length() > 100) {
+            throw new TooLongException();
+        } else {
+            user.setEmail(newEmail);
+            logger.debug("Email updated to: "+ user.getEmail());
+            return userRepo.save(user);
+        }
     }
 
-    public User updatePassword(User user, String newPassword) {
-        user.setPassword(bCryptPasswordEncoder.encode(newPassword));
-        return userRepo.save(user);
+    public User updatePassword(User user, String newPassword) throws Exception {
+        if (newPassword.length() > 45) {
+            throw new TooLongException();
+        } else {
+            user.setPassword(bCryptPasswordEncoder.encode(newPassword));
+            logger.debug("Password updated");
+            return userRepo.save(user);
+        }
     }
 
     public void updateBalances(User sender, User receiver, double amount) {
-        sender.setBalance(sender.getBalance()-amount);
-        receiver.setBalance(receiver.getBalance()+amount);
+        sender.setBalance(sender.getBalance() - amount);
+        receiver.setBalance(receiver.getBalance() + amount);
         userRepo.save(sender);
+        logger.debug("Sender balance updated");
         userRepo.save(receiver);
+        logger.debug("Receiver balance updated");
     }
 
     public User getUserByUsername(String username) {
@@ -58,29 +93,22 @@ public class UserService {
         }
     }
 
-    public int getUserIdByUsername(String username) {
-        Optional<User> optUser = userRepo.findByUsername(username);
-        if (optUser.isPresent()) {
-            return optUser.get().getId();
-        } else {
-            throw new UsernameNotFoundException(username);
-        }
+    public boolean isAnExistingUsername(String username) {
+        return userRepo.findByUsername(username).isPresent();
     }
 
-    public boolean isAnExistingUser(String username) {
-        return userRepo.findByUsername(username) != null;
+    public boolean isAnExistingEmail(String email) {
+        return userRepo.findByEmail(email).isPresent();
     }
-
 
     // dev utilities
-    public User getUserById(Integer id) {
-        Optional<User> user = userRepo.findById(id);
-        return user.orElse(null);
-    }
-
     public List<User> getAllUsers() {
         return userRepo.findAll();
     }
 
-
+    public void motherlode(int userId, double newBalance) {
+        User user = userRepo.findById(userId).get();
+        user.setBalance(newBalance);
+        userRepo.save(user);
+    }
 }

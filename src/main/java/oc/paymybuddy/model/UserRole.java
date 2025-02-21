@@ -1,5 +1,6 @@
 package oc.paymybuddy.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -8,7 +9,7 @@ import jakarta.persistence.*;
 public class UserRole {
 
     @EmbeddedId
-    private UserRoleId id = new UserRoleId();
+    private UserRoleId userRoleId;
 
     @ManyToOne(
             fetch = FetchType.EAGER,
@@ -16,20 +17,32 @@ public class UserRole {
     )
     @MapsId("userId")
     @JoinColumn(name="user_id")
-    @JsonManagedReference
+    @JsonBackReference("userRoles")
     private User user;
 
     @ManyToOne(
             fetch = FetchType.EAGER,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE}
     )
-    @MapsId("role")
-    @JoinColumn(name="role", referencedColumnName = "role_name")
-    @JsonManagedReference
+    @MapsId("roleName")
+    @JoinColumn(name="role_name", referencedColumnName = "role_name")
+    @JsonBackReference("role")
     private Role role;
 
-    public UserRoleId getId() {
-        return id;
+    public UserRole(UserRoleId userRoleId) {
+        this.userRoleId = userRoleId;
+    }
+
+    public UserRole() {
+
+    }
+
+    public void setUserRoleId(UserRoleId userRoleId) {
+        this.userRoleId = userRoleId;
+    }
+
+    public UserRoleId getUserRoleId() {
+        return userRoleId;
     }
 
     public User getUser() {

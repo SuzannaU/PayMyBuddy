@@ -24,8 +24,8 @@ CREATE TABLE IF NOT EXISTS `PayMyBuddy`.`users`
 (
     `user_id`  INT          NOT NULL AUTO_INCREMENT,
     `username` VARCHAR(45)  NOT NULL UNIQUE,
-    `email`    VARCHAR(200) NOT NULL UNIQUE,
-    `password` VARCHAR(100)  NOT NULL,
+    `email`    VARCHAR(100) NOT NULL UNIQUE,
+    `password` VARCHAR(250)  NOT NULL,
     `balance`  FLOAT        NULL,
     PRIMARY KEY (`user_id`)
 )
@@ -57,13 +57,13 @@ CREATE TABLE IF NOT EXISTS `PayMyBuddy`.`transactions`
     CONSTRAINT `fk_sender`
         FOREIGN KEY (`sender_id`)
             REFERENCES `PayMyBuddy`.`users` (`user_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
     CONSTRAINT `fk_receiver`
         FOREIGN KEY (`receiver_id`)
             REFERENCES `PayMyBuddy`.`users` (`user_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
 )
     ENGINE = InnoDB;
 
@@ -81,8 +81,7 @@ DROP TABLE IF EXISTS `PayMyBuddy`.`roles`;
 CREATE TABLE IF NOT EXISTS `PayMyBuddy`.`roles`
 (
     `role_name` VARCHAR(25) NOT NULL UNIQUE,
-    `role_id`   INT         NOT NULL AUTO_INCREMENT,
-    PRIMARY KEY (`role_id`)
+    PRIMARY KEY (`role_name`)
 )
     ENGINE = InnoDB;
 
@@ -99,22 +98,22 @@ DROP TABLE IF EXISTS `PayMyBuddy`.`user_role`;
 CREATE TABLE IF NOT EXISTS `PayMyBuddy`.`user_role`
 (
     `user_id` INT         NOT NULL,
-    `role`    VARCHAR(25) NOT NULL,
-    PRIMARY KEY (`user_id`, `role`),
+    `role_name`    VARCHAR(25) NOT NULL,
+    PRIMARY KEY (`user_id`, `role_name`),
     CONSTRAINT `user_id`
         FOREIGN KEY (`user_id`)
             REFERENCES `PayMyBuddy`.`users` (`user_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
-    CONSTRAINT `role`
-        FOREIGN KEY (`role`)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
+    CONSTRAINT `role_name`
+        FOREIGN KEY (`role_name`)
             REFERENCES `PayMyBuddy`.`roles` (`role_name`)
             ON DELETE NO ACTION
-            ON UPDATE NO ACTION
+            ON UPDATE CASCADE
 )
     ENGINE = InnoDB;
 
-INSERT INTO `PayMyBuddy`.`user_role` (`user_id`, `role`)
+INSERT INTO `PayMyBuddy`.`user_role` (`user_id`, `role_name`)
 VALUES (1, 'ADMIN'),
        (1, 'USER'),
        (2, 'USER'),
@@ -133,13 +132,13 @@ CREATE TABLE IF NOT EXISTS `PayMyBuddy`.`user_user`
     CONSTRAINT `fk_user1`
         FOREIGN KEY (`user1_id`)
             REFERENCES `PayMyBuddy`.`users` (`user_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
     CONSTRAINT `fk_user2`
         FOREIGN KEY (`user2_id`)
             REFERENCES `PayMyBuddy`.`users` (`user_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
 )
     ENGINE = InnoDB;
 

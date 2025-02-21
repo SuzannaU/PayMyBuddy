@@ -1,5 +1,6 @@
 package oc.paymybuddy.service;
 
+import oc.paymybuddy.exceptions.TooLongException;
 import oc.paymybuddy.model.Transaction;
 import oc.paymybuddy.model.User;
 import oc.paymybuddy.repository.TransactionRepo;
@@ -10,13 +11,16 @@ import java.util.List;
 @Service
 public class TransactionService {
 
-    private TransactionRepo transactionRepo;
+    private final TransactionRepo transactionRepo;
 
     public TransactionService(TransactionRepo transactionRepo) {
         this.transactionRepo = transactionRepo;
     }
 
     public Transaction addTransaction(User sender, User receiver, String description, double amount) {
+        if(description.length()>250){
+            throw new TooLongException();
+        }
         Transaction transaction = new Transaction();
         transaction.setSender(sender);
         transaction.setReceiver(receiver);

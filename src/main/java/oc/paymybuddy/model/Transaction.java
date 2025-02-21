@@ -24,7 +24,7 @@ public class Transaction {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}
     )
     @JoinColumn(name = "sender_id")
-    @JsonManagedReference
+    @JsonManagedReference("sentTransactions")
     private User sender;
 
     @ManyToOne(
@@ -32,7 +32,7 @@ public class Transaction {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}
     )
     @JoinColumn(name = "receiver_id")
-    @JsonManagedReference
+    @JsonManagedReference("receivedTransactions")
     private User receiver;
 
     private String description;

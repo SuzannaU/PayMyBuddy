@@ -2,12 +2,15 @@ package oc.paymybuddy.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIgnoreProperties({"sentTransactions", "receivedTransactions", "invitingRelations", "invitedRelations"})
 @Entity
 @Table(name = "users")
 @DynamicUpdate
@@ -27,7 +30,7 @@ public class User {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},
             fetch = FetchType.LAZY
     )
-    @JsonBackReference
+    @JsonBackReference("sentTransactions")
     private List<Transaction> sentTransactions;
 
 
@@ -36,7 +39,7 @@ public class User {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},
             fetch = FetchType.LAZY
     )
-    @JsonBackReference
+    @JsonBackReference("receivedTransactions")
     private List<Transaction> receivedTransactions;
 
 
@@ -45,7 +48,7 @@ public class User {
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
-    @JsonBackReference
+    @JsonBackReference("invitingUserReference")
     private List<Relation> invitingRelations;
 
 
@@ -54,7 +57,7 @@ public class User {
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
-    @JsonBackReference
+    @JsonBackReference("invitedUserReference")
     private List<Relation> invitedRelations;
 
     @OneToMany(
@@ -62,8 +65,8 @@ public class User {
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
-    @JsonBackReference
-    private List<UserRole> roles;
+    @JsonManagedReference("userRoles")
+    private List<UserRole> userRoles;
 
     @JsonIgnore
     public List<Relation> getRelations() {
@@ -179,11 +182,11 @@ public class User {
         this.invitedRelations = invitedRelations;
     }
 
-    public List<UserRole> getRoles() {
-        return roles;
+    public List<UserRole> getUserRoles() {
+        return userRoles;
     }
 
-    public void setRoles(List<UserRole> roles) {
-        this.roles = roles;
+    public void setUserRoles(List<UserRole> userRoles) {
+        this.userRoles = userRoles;
     }
 }

@@ -1,5 +1,6 @@
 package oc.paymybuddy.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.persistence.Embeddable;
 
 import java.io.Serializable;
@@ -9,7 +10,16 @@ import java.util.Objects;
 public class UserRoleId implements Serializable {
 
     private int userId;
-    private String role;
+    private String roleName;
+
+    public UserRoleId(int userId, String roleName) {
+        this.userId = userId;
+        this.roleName = roleName;
+    }
+
+    public UserRoleId() {
+
+    }
 
     public int getUserId() {
         return userId;
@@ -19,12 +29,12 @@ public class UserRoleId implements Serializable {
         this.userId = userId;
     }
 
-    public String getRole() {
-        return role;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
     @Override
@@ -32,11 +42,11 @@ public class UserRoleId implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
 
         UserRoleId that = (UserRoleId) o;
-        return userId == that.userId && Objects.equals(role, that.role);
+        return userId == that.userId && Objects.equals(roleName, that.roleName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, role);
+        return Objects.hash(userId, roleName);
     }
 }

@@ -1,6 +1,5 @@
 package oc.paymybuddy.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -13,7 +12,7 @@ import java.util.List;
 public class Relation {
 
     @EmbeddedId
-    private RelationId id = new RelationId();
+    private RelationId id;
 
     @ManyToOne(
             fetch = FetchType.EAGER,
@@ -21,7 +20,7 @@ public class Relation {
     )
     @MapsId("invitingUserId")
     @JoinColumn(name = "user1_id")
-    @JsonManagedReference
+    @JsonManagedReference("invitingUserReference")
     private User invitingUser;
 
     @ManyToOne(
@@ -30,7 +29,7 @@ public class Relation {
     )
     @MapsId("invitedUserId")
     @JoinColumn(name = "user2_id")
-    @JsonManagedReference
+    @JsonManagedReference("invitedUserReference")
     private User invitedUser;
 
     @JsonIgnore
