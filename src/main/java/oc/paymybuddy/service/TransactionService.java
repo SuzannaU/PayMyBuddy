@@ -32,14 +32,4 @@ public class TransactionService {
     public List<Transaction> getTransactionsByUser(User user) {
         return transactionRepo.findAllBySenderOrReceiver(user, user);
     }
-
-
-    // dev utilities
-    public Transaction getTransactionById(int id) {
-        return transactionRepo.findById(id).get();
-    }
-
-    public List<Transaction> getAllTransactions() {
-        return transactionRepo.findAll();
-    }
 }

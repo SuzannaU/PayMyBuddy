@@ -18,12 +18,12 @@ import java.util.Optional;
 public class UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private UserRepo userRepo;
+    private BCryptPasswordEncoder passwordEncoder;
 
-    public UserService(UserRepo userRepo) {
+    public UserService(UserRepo userRepo, BCryptPasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
+        this.passwordEncoder = passwordEncoder;
     }
-
-    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
 
     public User registerUser(User user) {
         if (isAnExistingUsername(user.getUsername())) {
@@ -35,41 +35,41 @@ public class UserService {
                 || user.getPassword().length() > 45) {
             throw new TooLongException();
         } else {
-            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             logger.debug("Encoded Password: " + user.getPassword());
             return userRepo.save(user);
         }
     }
 
-    public User updateUsername(User user, String newUsername) throws Exception {
+    public User updateUsername(User user, String newUsername) {
         if (isAnExistingUsername(newUsername)) {
             throw new ExistingUsernameException();
         } else if (newUsername.length() > 45) {
             throw new TooLongException();
         } else {
             user.setUsername(newUsername);
-            logger.debug("Username updated to: "+ user.getUsername());
+            logger.debug("Username updated to: " + user.getUsername());
             return userRepo.save(user);
         }
     }
 
-    public User updateEmail(User user, String newEmail) throws Exception {
+    public User updateEmail(User user, String newEmail) {
         if (isAnExistingEmail(newEmail)) {
             throw new ExistingEmailException();
         } else if (newEmail.length() > 100) {
             throw new TooLongException();
         } else {
             user.setEmail(newEmail);
-            logger.debug("Email updated to: "+ user.getEmail());
+            logger.debug("Email updated to: " + user.getEmail());
             return userRepo.save(user);
         }
     }
 
-    public User updatePassword(User user, String newPassword) throws Exception {
+    public User updatePassword(User user, String newPassword){
         if (newPassword.length() > 45) {
             throw new TooLongException();
         } else {
-            user.setPassword(bCryptPasswordEncoder.encode(newPassword));
+            user.setPassword(passwordEncoder.encode(newPassword));
             logger.debug("Password updated");
             return userRepo.save(user);
         }

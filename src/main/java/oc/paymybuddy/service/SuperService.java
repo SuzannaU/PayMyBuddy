@@ -1,5 +1,7 @@
 package oc.paymybuddy.service;
 
+import oc.paymybuddy.exceptions.UnsufficientFundsException;
+import oc.paymybuddy.exceptions.UserNotFoundException;
 import oc.paymybuddy.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +32,7 @@ public class SuperService {
         if (userService.isAnExistingUsername(invitedUser.getUsername())) {
             return relationService.addRelation(invitingUser, invitedUser);
         }
-        return null;
+        throw new UserNotFoundException();    // handle in upper layer
     }
 
     public Set<String> getRelationsUsernamesByUsername(String username) {
@@ -43,7 +45,7 @@ public class SuperService {
             userService.updateBalances(sender, receiver, amount);
             return transactionService.addTransaction(sender, receiver, description, amount);
         }
-        return null;
+        throw new UnsufficientFundsException();    // handle in upper layer
     }
 
     public List<Transaction> getTransactionsByUsername(String username) {
@@ -56,6 +58,4 @@ public class SuperService {
         userRoleService.assignRoleToUser(user, roleService.getRoleByRoleName(Roles.USER.name()));
         return registeredUser;
     }
-
-
 }
