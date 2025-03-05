@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.ArrayList;
@@ -60,10 +61,10 @@ public class TransactionServiceTest {
 
     @Test
     public void getTransactionsByUser_withCorrectParameters_returnsTransactions() {
-        when(transactionRepo.findAllBySenderOrReceiver(user1, user2)).thenReturn(new ArrayList<>());
-        List<Transaction> transactions = transactionService.getTransactionsByUser(user1);
+        when(transactionRepo.findAllBySender(user1, any(Sort.class))).thenReturn(new ArrayList<>());
+        List<Transaction> transactions = transactionService.getSentTransactionsByUser(user1);
 
         assertNotNull(transactions);
-        verify(transactionRepo).findAllBySenderOrReceiver(any(), any());
+        verify(transactionRepo).findAllBySender(any(), any(Sort.class));
     }
 }

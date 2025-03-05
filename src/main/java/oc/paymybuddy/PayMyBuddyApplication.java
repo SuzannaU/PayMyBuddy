@@ -17,10 +17,10 @@ public class PayMyBuddyApplication {
     public static void main(String[] args) {
         SpringApplication.run(PayMyBuddyApplication.class, args);
 
-//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//        String rawPassword = "password1";
-//        String encodedPassword = encoder.encode(rawPassword);
-//        System.out.println("Mot de passe encodé : " + encodedPassword);
+//        @Bean
+//        public LayoutDialect layoutDialect() {
+//            return new LayoutDialect();
+//        }
         }
 
 

@@ -4,6 +4,7 @@ import oc.paymybuddy.exceptions.TooLongException;
 import oc.paymybuddy.model.Transaction;
 import oc.paymybuddy.model.User;
 import oc.paymybuddy.repository.TransactionRepo;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class TransactionService {
     }
 
     public Transaction addTransaction(User sender, User receiver, String description, double amount) {
-        if(description.length()>250){
+        if (description.length() > 250) {
             throw new TooLongException();
         }
         Transaction transaction = new Transaction();
@@ -29,7 +30,13 @@ public class TransactionService {
         return transactionRepo.save(transaction);
     }
 
-    public List<Transaction> getTransactionsByUser(User user) {
-        return transactionRepo.findAllBySenderOrReceiver(user, user);
+    public List<Transaction> getSentTransactionsByUser(User user) {
+        List<Transaction> transactions = transactionRepo.findAllBySender(
+                user, Sort.by(Sort.Direction.DESC, "id"));
+//        for (Transaction transaction : transactions) {
+//            List<User> transactionUsers = transaction.getUsers();
+//            transactionUsers.remove(user);
+//        }
+        return transactions;
     }
 }

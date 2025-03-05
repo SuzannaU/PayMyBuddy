@@ -40,7 +40,10 @@ public class SuperService {
         return relationService.getRelationsUsernamesByUser(user);
     }
 
-    public Transaction transfer(User sender, User receiver, String description, double amount) {
+    public Transaction transfer(String senderUsername, String receiverUsername, String description, String stringAmount) {
+        User sender = userService.getUserByUsername(senderUsername);
+        User receiver = userService.getUserByUsername(receiverUsername);
+        double amount = Double.parseDouble(stringAmount);
         if (sender.getBalance() >= amount) {
             userService.updateBalances(sender, receiver, amount);
             return transactionService.addTransaction(sender, receiver, description, amount);
@@ -48,14 +51,28 @@ public class SuperService {
         throw new UnsufficientFundsException();    // handle in upper layer
     }
 
-    public List<Transaction> getTransactionsByUsername(String username) {
+//    public Transaction transfer(User sender, User receiver, String description, double amount) {
+//        if (sender.getBalance() >= amount) {
+//            userService.updateBalances(sender, receiver, amount);
+//            return transactionService.addTransaction(sender, receiver, description, amount);
+//        }
+//        throw new UnsufficientFundsException();    // handle in upper layer
+//    }
+
+    public List<Transaction> getSentTransactionsByUsername(String username) {
         User user = userService.getUserByUsername(username);
-        return transactionService.getTransactionsByUser(user);
+        return transactionService.getSentTransactionsByUser(user);
+    }
+
+    public User getUserByUsername(String username) {
+        return userService.getUserByUsername(username);
     }
 
     public User registerUser(User user) {
+        logger.debug("SuperService/registerUser method called");
         User registeredUser = userService.registerUser(user);
         userRoleService.assignRoleToUser(user, roleService.getRoleByRoleName(Roles.USER.name()));
+        logger.debug("registerUser method called");
         return registeredUser;
     }
 }

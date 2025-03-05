@@ -28,33 +28,33 @@ public class UserController {
         this.superService = superService;
     }
 
-    @GetMapping("/user")
-    public String getUser() {
-        logger.info("getUser");
-        return "User";
-    }
-
-    @GetMapping("/users")
-    public List<User> getUsers() {
-        logger.debug("getUsers");
-        return userService.getAllUsers();
-    }
-
-    @PostMapping("/user")
-    public User registerUser(@RequestBody User user) {
-        logger.info("registerUser");
-        try {
-            return superService.registerUser(user);
-        } catch (ExistingUsernameException e) {
-            logger.error("Username already exists");
-            return user;
-        } catch (ExistingEmailException e2) {
-            logger.error("Email already exists");
-            return user;
-        } catch (TooLongException e3){
-            logger.error("Username must be under 45 characters\n Email must be under 100 characters\n Password must be under 45 characters");
-            return user;
-        }
-    }
+//    @GetMapping("/user")
+//    public String getUser() {
+//        logger.info("getUser");
+//        return "User";
+//    }
+//
+//    @GetMapping("/users")
+//    public List<User> getUsers() {
+//        logger.debug("getUsers");
+//        return userService.getAllUsers();
+//    }
+//
+//    @PostMapping("/user")
+//    public User registerUser(@RequestBody User user) {
+//        logger.info("registerUser");
+//        try {
+//            return superService.registerUser(user);
+//        } catch (ExistingUsernameException e) {
+//            logger.error("Username already exists");
+//            return user;
+//        } catch (ExistingEmailException e2) {
+//            logger.error("Email already exists");
+//            return user;
+//        } catch (TooLongException e3){
+//            logger.error("Username must be under 45 characters\n Email must be under 100 characters\n Password must be under 45 characters");
+//            return user;
+//        }
+//    }
 
 }

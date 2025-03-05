@@ -1,0 +1,36 @@
+.navbar{
+    margin-top: 50px;
+}
+
+.navbar-brand{
+    width: 137px;
+    height: 30px;
+    font-family: Inter, sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 30px;
+    padding:0;
+    letter-spacing: 0;
+    color: black;
+
+}
+
+#navbarNavAltMarkup {
+    height: 30px;
+    font-family: Inter, sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 30px;
+    letter-spacing: 0;
+}
+.navbar-nav{
+    margin-left:auto;
+    margin-right:1%;
+    gap: 30px;
+}
+
+.navbar-nav .nav-link.active{
+    color: #207FEE;
+    font-weight: 700;
+}
+

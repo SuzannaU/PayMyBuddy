@@ -1,0 +1,185 @@
+/********************************** Login form *************************************/
+form[name="login-form"] {
+    width: 500px;
+    height: 688px;
+    /*top: 210px;*/
+    /*left: 470px;*/
+    border: 1px solid #000000;
+    margin: auto;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.login-title {
+    margin:80px 150px 0 150px;
+}
+
+.login-title button.title-btn {
+    width: 214px;
+    height: 64px;
+    border-radius: 8px;
+    border: none;
+    gap: 8px;
+    background-color: #F69F1D;
+    box-shadow: 0 1px 2px 0 #0000000D;
+    text-align: center;
+    vertical-align: center;
+    font-family: Inter, sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 36px;
+    color: #FFFFFF;
+}
+.login-inputs {
+    margin:100px auto 100px auto;
+}
+.login-mb-3 {
+    width: 295px;
+    height: 60px;
+    margin: 0 auto 30px auto;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    gap: 8px;
+    border: 1px solid #E0E0E0;
+    box-shadow: 0 1px 2px 0 #0000000D;
+}
+
+#username, #email,
+#password {
+    font-family: Inter, sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 36px;
+    letter-spacing: 0;
+    color: #828282;
+    width: 265px;
+    height: 60px;
+    background-color: #FFFFFF;
+    gap: 8px;
+    border: none;
+    border-radius: 8px;
+    padding: 0 15px;
+}
+
+#username::placeholder,
+#email::placeholder,
+#password::placeholder {
+    opacity: 1; /* Assure que le placeholder est bien visible sur certains navigateurs */
+}
+
+.login-form-actions {
+    margin:0 150px 80px 150px;
+}
+
+.login-form-actions button.btn {
+    width: 205px;
+    height: 64px;
+    border-radius: 8px;
+    border: none;
+    /*padding: 14px 24px;*/
+    gap: 8px;
+    background-color: #207FEE;
+    box-shadow: 0 1px 2px 0 #0000000D;
+    text-align: center;
+    vertical-align: center;
+    font-family: Inter, sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 36px;
+    letter-spacing: 0;
+    color: #FFFFFF;
+}
+
+/********************************** register form *************************************/
+form[name="register-form"] {
+    width: 500px;
+    height: 688px;
+    /*top: 210px;*/
+    /*left: 470px;*/
+    border: 1px solid #000000;
+    margin: auto;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.register-title {
+    margin:60px 150px 60px 150px;
+}
+
+.register-title button.title-btn {
+    width: 214px;
+    height: 64px;
+    border-radius: 8px;
+    border: none;
+    gap: 8px;
+    background-color: #F69F1D;
+    box-shadow: 0 1px 2px 0 #0000000D;
+    text-align: center;
+    vertical-align: center;
+    font-family: Inter, sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 36px;
+    color: #FFFFFF;
+}
+
+.register-inputs {
+    margin:100px auto 100px auto;
+}
+
+.register-mb-3 {
+    width: 295px;
+    height: 60px;
+    margin: 0 auto 20px auto;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    gap: 8px;
+    border: 1px solid #E0E0E0;
+    box-shadow: 0 1px 2px 0 #0000000D;
+}
+
+/*#username, #email,*/
+/*#password {*/
+/*    font-family: Inter, sans-serif;*/
+/*    font-weight: 700;*/
+/*    font-size: 24px;*/
+/*    line-height: 36px;*/
+/*    letter-spacing: 0;*/
+/*    color: #828282;*/
+/*    width: 265px;*/
+/*    height: 60px;*/
+/*    background-color: #FFFFFF;*/
+/*    gap: 8px;*/
+/*    border: none;*/
+/*    border-radius: 8px;*/
+/*    padding: 0 15px;*/
+/*}*/
+
+/*#username::placeholder,*/
+/*#password::placeholder {*/
+/*    opacity: 1; !* Assure que le placeholder est bien visible sur certains navigateurs *!*/
+/*}*/
+
+.register-form-actions {
+    margin:60px 150px 60px 150px;
+}
+
+.register-form-actions button.btn {
+    width: 205px;
+    height: 64px;
+    border-radius: 8px;
+    border: none;
+    /*padding: 14px 24px;*/
+    gap: 8px;
+    background-color: #207FEE;
+    box-shadow: 0 1px 2px 0 #0000000D;
+    text-align: center;
+    vertical-align: center;
+    font-family: Inter, sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 36px;
+    letter-spacing: 0;
+    color: #FFFFFF;
+}
+
+
+

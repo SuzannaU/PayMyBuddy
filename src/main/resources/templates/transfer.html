@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layouts/main-layout.html}">
+<head>
+    <link rel="stylesheet" href="/css/transfer.css"/>
+</head>
+<body>
+
+<div class="container" layout:fragment="content">
+
+    <form name="transfer" th:action="@{/transfer}" method="post">
+        <div class="row align-items-center">
+            <div class="col-4 d-flex align-items-center" id="relations-dropdown">
+                    <label for="receiver"></label>
+                    <select id="receiver" name="receiver" required>
+                        <option value="" disabled selected hidden>Sélectionner une relation</option>
+                        <option th:each="username : ${relationsUsernames}"
+                                th:value="${username}"
+                                th:text="${username}"></option>
+                    </select>
+            </div>
+            <div class="col-4" id="description-col">
+                <input type="text" id="description" name="description" maxlength="250" required size="30"
+                       placeholder="Description"/>
+            </div>
+            <div class="col-2" id="amount-col">
+                <input type="number" id="amount" name="amount" min="0" step="0.01" max="1000" required size="5"
+                       placeholder="0€"/>
+            </div>
+            <div class="col-2" id="transfer-action">
+                <button type="submit" class="btn">Payer</button>
+            </div>
+        </div>
+    </form>
+
+
+    <div class="transactions">
+        <div class="table-title">
+            <span>Mes transactions</span>
+        </div>
+        <div class="transactions-table">
+            <div class="row" id="table-top">
+                <div class="col-4" id="relation-title">Relations</div>
+                <div class="col-6" id="description-title">Description</div>
+                <div class="col-2" id="amount-title">Montant</div>
+            </div>
+            <div class="row table-rows" th:each="transaction : ${transactions}">
+                <div class="col-4" th:text="${transaction.receiver.getUsername()}"></div>
+                <div class="col-6" th:text="${transaction.description}"></div>
+                <div class="col-2" th:text="${transaction.amount}"></div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+</body>
+</html>

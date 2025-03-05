@@ -32,9 +32,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        Optional<User> optUser = userRepo.findByUsername(username);
+        Optional<User> optUser = userRepo.findByEmail(email);
         if (optUser.isPresent()) {
             User user = optUser.get();
             logger.debug("user from db: " + user.getUsername());
@@ -44,7 +44,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                     user.getPassword(),
                     getGrantedAuthorities(user));
         } else {
-            throw new UsernameNotFoundException(username);
+            throw new UsernameNotFoundException(email);
         }
     }
 

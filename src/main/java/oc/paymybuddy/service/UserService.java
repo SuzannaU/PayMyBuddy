@@ -26,6 +26,7 @@ public class UserService {
     }
 
     public User registerUser(User user) {
+        logger.debug("UserService/registerUser method called");
         if (isAnExistingUsername(user.getUsername())) {
             throw new ExistingUsernameException();
         } else if (isAnExistingEmail(user.getEmail())) {

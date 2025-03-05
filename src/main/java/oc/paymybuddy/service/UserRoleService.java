@@ -25,6 +25,7 @@ public class UserRoleService {
     }
 
     public void assignRoleToUser(User user, Role role) {
+        logger.debug("SuperService/assignRoleToUser method called");
         UserRole userRole = new UserRole(new UserRoleId(user.getId(),role.getRoleName()));
         userRole.setUser(user);
         userRole.setRole(role);

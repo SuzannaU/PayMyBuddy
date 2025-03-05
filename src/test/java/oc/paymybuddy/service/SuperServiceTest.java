@@ -84,11 +84,17 @@ public class SuperServiceTest {
     @Test
     public void transfer_withCorrectParameters_returnsTransaction() {
         user1.setBalance(10.00);
+
+        when(userService.getUserByUsername(anyString())).thenReturn(user1);
         doNothing().when(userService).updateBalances(any(), any(), any(Double.class));
         when(transactionService.addTransaction(
                 any(), any(), anyString(), any(Double.class))).thenReturn(new Transaction());
 
-        Transaction transaction = superService.transfer(user1, user2, "description", 10.00);
+        Transaction transaction = superService.transfer(
+                "senderUsername",
+                "receiverUsername",
+                "description",
+                "10");
 
         assertNotNull(transaction);
         verify(userService).updateBalances(any(), any(), any(Double.class));
@@ -101,7 +107,11 @@ public class SuperServiceTest {
         user1.setBalance(9.9999);
 
         assertThrows(UnsufficientFundsException.class,
-                () -> superService.transfer(user1, user2, "description", 10.00));
+                () -> superService.transfer(
+                        "senderUsername",
+                        "receiverUsername",
+                        "description",
+                        "10"));
 
         verify(userService, never()).updateBalances(any(), any(), any(Double.class));
         verify(transactionService, never()).addTransaction(any(), any(), anyString(), any(Double.class));
@@ -111,13 +121,13 @@ public class SuperServiceTest {
     public void getTransactionsByUsername_withCorrectParameters_returnsTransactions() {
         List<Transaction> mockTransactions = new ArrayList<>();
         when(userService.getUserByUsername(any())).thenReturn(user1);
-        when(transactionService.getTransactionsByUser(any())).thenReturn(mockTransactions);
+        when(transactionService.getSentTransactionsByUser(any())).thenReturn(mockTransactions);
 
-        List<Transaction> transactions = superService.getTransactionsByUsername("username");
+        List<Transaction> transactions = superService.getSentTransactionsByUsername("username");
 
         assertNotNull(transactions);
         verify(userService).getUserByUsername(any());
-        verify(transactionService).getTransactionsByUser(any());
+        verify(transactionService).getSentTransactionsByUser(any());
     }
 
     @Test
