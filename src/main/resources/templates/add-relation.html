@@ -1,13 +1,32 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/main-layout.html}">
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main-layout.html}">
 <head>
+    <link rel="stylesheet" href="/css/add-relation.css"/>
 </head>
 <body>
 
 <div class="container" layout:fragment="content">
-    <h1>Add relation</h1>
-    <p>welcome</p>
+
+    <div class="add-relation">
+
+        <form name="add-relation" th:action="@{/add-relation}" method="post">
+            <div class="row align-items-center">
+                <div class="col d-flex align-items-center" id="add-relation-input" >
+                    <label for="relation">Chercher une relation</label>
+                    <input type="email" id="relation" name="invitedUserEmail" maxlength="100"
+                           autofocus required placeholder="Saisir une adresse mail">
+                </div>
+                <div class="col d-flex align-items-center" id="add-relation-action">
+                    <button type="submit" class="btn">Ajouter</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
 </div>
+
 
 </body>
 </html>

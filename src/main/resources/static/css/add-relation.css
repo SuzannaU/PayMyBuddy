@@ -1,0 +1,89 @@
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-relation{
+    width: 946px;
+    height: 300px;
+    margin-top: 80px;
+    top: 362px;
+    left: 262px;
+    gap: 16px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form[name="add-relation"]{
+}
+
+#add-relation-input{
+    width: 484px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+label[for="relation"]{
+    width: 484px;
+    font-family: Inter, sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    color : black;
+    line-height: 150%;
+    letter-spacing: 0;
+}
+
+#relation{
+    width: 484px;
+    height: 54px;
+    gap: 8px;
+    padding: 12px 16px;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    border: 1px solid #E0E0E0;
+    box-shadow: 0 1px 2px 0 #0000000D;
+}
+
+#relation::placeholder{
+    font-family: Inter, sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 150%;
+    letter-spacing: 0;
+    color: #828282;
+}
+
+#add-relation-action{
+    width: 151px;
+    padding: 0;
+    /*display: flex;*/
+    /*justify-content: center;*/
+    margin-left: 50px;
+}
+
+#add-relation-action button.btn{
+    width: 151px;
+    height: 62px;
+    border-radius: 8px;
+    border: none;
+    /*padding: 24px 32px;*/
+    gap: 8px;
+    background: #F69F1D;
+    box-shadow: 0 1px 2px 0 #0000000D;
+
+    text-align: center;
+    vertical-align: center;
+    font-family: Inter, sans-serif;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 150%;
+    letter-spacing: 0;
+    color: #FFFFFF;
+}
+
+
+

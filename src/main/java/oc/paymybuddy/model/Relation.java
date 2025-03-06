@@ -12,7 +12,7 @@ import java.util.List;
 public class Relation {
 
     @EmbeddedId
-    private RelationId id;
+    private RelationId relationId;
 
     @ManyToOne(
             fetch = FetchType.EAGER,
@@ -40,8 +40,12 @@ public class Relation {
         return users;
     }
 
-    public RelationId getId() {
-        return id;
+    public void setRelationId(RelationId relationId) {
+        this.relationId = relationId;
+    }
+
+    public RelationId getRelationId() {
+        return relationId;
     }
 
     public User getInvitingUser() {

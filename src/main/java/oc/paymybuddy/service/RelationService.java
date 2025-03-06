@@ -1,6 +1,7 @@
 package oc.paymybuddy.service;
 
 import oc.paymybuddy.model.Relation;
+import oc.paymybuddy.model.RelationId;
 import oc.paymybuddy.model.User;
 import oc.paymybuddy.repository.RelationRepo;
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ public class RelationService {
 
     public Relation addRelation(User invitingUser, User invitedUser) {
         Relation relation = new Relation();
+        relation.setRelationId(new RelationId(invitingUser.getId(),  invitedUser.getId()));
         relation.setInvitingUser(invitingUser);
         relation.setInvitedUser(invitedUser);
         logger.debug("Adding relation between {} and {}",

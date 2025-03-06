@@ -20,7 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-public class SuperServiceTest {
+public class ControllerServiceTest {
 
     @MockitoBean
     private RelationService relationService;
@@ -33,7 +33,7 @@ public class SuperServiceTest {
     @MockitoBean
     private RoleService roleService;
     @Autowired
-    private SuperService superService;
+    private ControllerService controllerService;
     private User user1;
     private User user2;
 
@@ -46,11 +46,11 @@ public class SuperServiceTest {
     }
 
     @Test
-    public void addRelation_withExistingUsername_returnsRelation() {
-        when(userService.isAnExistingUsername(any())).thenReturn(true);
+    public void addRelation_withExistingEmail_returnsRelation() {
+        when(userService.isAnExistingEmail(any())).thenReturn(true);
         when(relationService.addRelation(any(), any())).thenReturn(new Relation());
 
-        Relation relation = superService.addRelation(user1, user2);
+        Relation relation = controllerService.addRelation(user1.getUsername(), user2.getUsername());
 
         assertNotNull(relation);
         verify(userService).isAnExistingUsername(any());
@@ -58,10 +58,10 @@ public class SuperServiceTest {
     }
 
     @Test
-    public void addRelation_withNotExistingUsername_throwsException() {
-        when(userService.isAnExistingUsername(any())).thenReturn(false);
+    public void addRelation_withNotExistingEmail_throwsException() {
+        when(userService.isAnExistingEmail(any())).thenReturn(false);
 
-        assertThrows(UserNotFoundException.class, () -> superService.addRelation(user1, user2));
+        assertThrows(UserNotFoundException.class, () -> controllerService.addRelation(user1.getUsername(), user2.getUsername()));
 
         verify(userService).isAnExistingUsername(any());
         verify(relationService, never()).addRelation(user1, user2);
@@ -73,7 +73,7 @@ public class SuperServiceTest {
         when(userService.getUserByUsername(any())).thenReturn(new User());
         when(relationService.getRelationsUsernamesByUser(any())).thenReturn(mockUsernames);
 
-        Set<String> usernames = superService.getRelationsUsernamesByUsername("user");
+        Set<String> usernames = controllerService.getRelationsUsernamesByUsername("user");
 
         assertNotNull(usernames);
         assertTrue(usernames.contains("user1") && usernames.contains("user2"));
@@ -90,7 +90,7 @@ public class SuperServiceTest {
         when(transactionService.addTransaction(
                 any(), any(), anyString(), any(Double.class))).thenReturn(new Transaction());
 
-        Transaction transaction = superService.transfer(
+        Transaction transaction = controllerService.transfer(
                 "senderUsername",
                 "receiverUsername",
                 "description",
@@ -107,7 +107,7 @@ public class SuperServiceTest {
         user1.setBalance(9.9999);
 
         assertThrows(UnsufficientFundsException.class,
-                () -> superService.transfer(
+                () -> controllerService.transfer(
                         "senderUsername",
                         "receiverUsername",
                         "description",
@@ -123,7 +123,7 @@ public class SuperServiceTest {
         when(userService.getUserByUsername(any())).thenReturn(user1);
         when(transactionService.getSentTransactionsByUser(any())).thenReturn(mockTransactions);
 
-        List<Transaction> transactions = superService.getSentTransactionsByUsername("username");
+        List<Transaction> transactions = controllerService.getSentTransactionsByUsername("username");
 
         assertNotNull(transactions);
         verify(userService).getUserByUsername(any());
@@ -135,7 +135,7 @@ public class SuperServiceTest {
         when(userService.registerUser(any())).thenReturn(user1);
         doNothing().when(userRoleService).assignRoleToUser(any(), any());
 
-        User user = superService.registerUser(user1);
+        User user = controllerService.registerUser(user1);
 
         assertNotNull(user);
         verify(userService).registerUser(any());

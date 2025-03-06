@@ -11,6 +11,14 @@ public class RelationId implements Serializable {
     private int invitingUserId;
     private int invitedUserId;
 
+    public RelationId(int invitingUserId, int invitedUserId) {
+        this.invitingUserId = invitingUserId;
+        this.invitedUserId = invitedUserId;
+    }
+
+    public RelationId() {
+    }
+
     public int getInvitingUserId() {
         return invitingUserId;
     }

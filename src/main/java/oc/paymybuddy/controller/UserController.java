@@ -1,31 +1,60 @@
 package oc.paymybuddy.controller;
 
-import oc.paymybuddy.exceptions.ExistingEmailException;
-import oc.paymybuddy.exceptions.ExistingUsernameException;
-import oc.paymybuddy.exceptions.TooLongException;
+import jakarta.servlet.http.HttpServletRequest;
 import oc.paymybuddy.model.User;
-import oc.paymybuddy.service.SuperService;
-import oc.paymybuddy.service.UserService;
+import oc.paymybuddy.service.ControllerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
-@RestController
+@Controller
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    private final UserService userService;
-    private final SuperService superService;
+    private final ControllerService controllerService;
 
-    public UserController(UserService userService, SuperService superService) {
-        this.userService = userService;
-        this.superService = superService;
+    public UserController(ControllerService controllerService) {
+        this.controllerService = controllerService;
+    }
+
+    @GetMapping("/login")
+    public String getLogin() {
+        return "login";
+    }
+
+    @GetMapping("/profile")
+    public String getProfile(HttpServletRequest request, Model model) {
+        String currentUsername = request.getUserPrincipal().getName();
+        User user = controllerService.getUserByUsername(currentUsername);
+        model.addAttribute("currentUser", user);
+        model.addAttribute("currentUrl", request.getRequestURI());
+        return "profile";
+    }
+
+    @PostMapping("/update-user")
+    public String getProfile(@ModelAttribute("user") User user) {
+        logger.debug("POST profile");
+        controllerService.updateUser(user);
+        return "redirect:/profile";
+    }
+
+    @GetMapping("/register")
+    public String getRegisterFrom(Model model) {
+        User user = new User();
+        model.addAttribute("user", user);
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String register(@ModelAttribute("user") User user) {
+        logger.debug("POST register");
+        controllerService.registerUser(user);
+        return "redirect:/login";
     }
 
 //    @GetMapping("/user")

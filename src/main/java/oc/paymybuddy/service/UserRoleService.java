@@ -25,11 +25,13 @@ public class UserRoleService {
     }
 
     public void assignRoleToUser(User user, Role role) {
-        logger.debug("SuperService/assignRoleToUser method called");
+        logger.debug("ControllerService/assignRoleToUser method called");
         UserRole userRole = new UserRole(new UserRoleId(user.getId(),role.getRoleName()));
         userRole.setUser(user);
         userRole.setRole(role);
-        logger.debug("role name {}, user name {}", userRole.getRole().getRoleName(), userRole.getUser().getUsername());
+        logger.debug("role name {}, user name {}",
+                userRole.getRole().getRoleName(),
+                userRole.getUser().getUsername());
         userRoleRepo.save(userRole);
     }
 }

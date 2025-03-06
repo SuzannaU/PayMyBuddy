@@ -94,6 +94,15 @@ public class UserService {
         }
     }
 
+    public User getUserByEmail(String email) {
+        Optional<User> optUser = userRepo.findByEmail(email);
+        if (optUser.isPresent()) {
+            return optUser.get();
+        } else {
+            throw new UsernameNotFoundException(email);
+        }
+    }
+
     public boolean isAnExistingUsername(String username) {
         return userRepo.findByUsername(username).isPresent();
     }

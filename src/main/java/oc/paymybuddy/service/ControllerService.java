@@ -11,16 +11,16 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class SuperService {
-    private static final Logger logger = LoggerFactory.getLogger(SuperService.class);
+public class ControllerService {
+    private static final Logger logger = LoggerFactory.getLogger(ControllerService.class);
     private final RelationService relationService;
     private final TransactionService transactionService;
     private final UserService userService;
     private final UserRoleService userRoleService;
     private final RoleService roleService;
 
-    public SuperService(RelationService relationService, TransactionService transactionService, UserService userService,
-                        UserRoleService userRoleService, RoleService roleService) {
+    public ControllerService(RelationService relationService, TransactionService transactionService, UserService userService,
+                             UserRoleService userRoleService, RoleService roleService) {
         this.relationService = relationService;
         this.transactionService = transactionService;
         this.userService = userService;
@@ -28,8 +28,11 @@ public class SuperService {
         this.roleService = roleService;
     }
 
-    public Relation addRelation(User invitingUser, User invitedUser) {
-        if (userService.isAnExistingUsername(invitedUser.getUsername())) {
+    public Relation addRelation(String invitingUsername, String invitedUserEmail) {
+
+        if (userService.isAnExistingEmail(invitedUserEmail)) {
+            User invitedUser = userService.getUserByEmail(invitedUserEmail);
+            User invitingUser = userService.getUserByUsername(invitingUsername);
             return relationService.addRelation(invitingUser, invitedUser);
         }
         throw new UserNotFoundException();    // handle in upper layer
@@ -69,10 +72,14 @@ public class SuperService {
     }
 
     public User registerUser(User user) {
-        logger.debug("SuperService/registerUser method called");
+        logger.debug("ControllerService/registerUser method called");
         User registeredUser = userService.registerUser(user);
         userRoleService.assignRoleToUser(user, roleService.getRoleByRoleName(Roles.USER.name()));
         logger.debug("registerUser method called");
         return registeredUser;
+    }
+
+    public void updateUser(User user) {
+
     }
 }
