@@ -1,6 +1,8 @@
 package oc.paymybuddy.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import oc.paymybuddy.exceptions.TooLongException;
+import oc.paymybuddy.exceptions.UnsufficientFundsException;
 import oc.paymybuddy.model.Transaction;
 import oc.paymybuddy.service.ControllerService;
 import org.slf4j.Logger;
@@ -19,31 +21,47 @@ public class TransactionController {
         this.controllerService = controllerService;
     }
 
-//    @GetMapping("/transactions")
-//    public List<Transaction> getPrincipalTransactions(HttpServletRequest request) {
-//        String username = request.getUserPrincipal().getName();
-//        return controllerService.getSentTransactionsByUsername(username);
-//    }
 
     @GetMapping("/transfer")
     public String getPrincipalTransactions(HttpServletRequest request, Model model) {
-        String username = request.getUserPrincipal().getName();
-        Transaction transaction = new Transaction();
-        var transactions = controllerService.getSentTransactionsByUsername(username);
-        var relationsUsernames = controllerService.getRelationsUsernamesByUsername(username);
-        model.addAttribute("transaction", transaction);
-        model.addAttribute("transactions", transactions);
-        model.addAttribute("relationsUsernames", relationsUsernames);
-        model.addAttribute("currentUrl", request.getRequestURI());
+        String senderUsername = request.getUserPrincipal().getName();
+        setUpView(request, model, senderUsername);
         return "transfer";
     }
 
     @PostMapping("/transfer")
-    public String transfer(@RequestParam String receiver, @RequestParam String description,@RequestParam String amount,HttpServletRequest request) {
+    public String transfer(
+            @RequestParam String receiver,
+            @RequestParam String description,
+            @RequestParam String amount,
+            Model model,
+            HttpServletRequest request) {
         logger.debug("POST transfer");
         String senderUsername = request.getUserPrincipal().getName();
-        controllerService.transfer(senderUsername, receiver, description, amount);
+        try {
+            controllerService.transfer(senderUsername, receiver, description, amount);
+        }catch (UnsufficientFundsException e){
+            logger.error("Not enough funds for this transfer");
+            setUpView(request, model, senderUsername);
+            model.addAttribute("fundsError", "Le solde est insuffisant.");
+            return "transfer";
+        } catch (TooLongException e2){
+            logger.error("Description is too long");
+            setUpView(request, model, senderUsername);
+            model.addAttribute("descriptionError", "La description doit faire moins de 250 caractères.");
+            return "transfer";
+        }
         return "redirect:/transfer";
+    }
+
+    private void setUpView(HttpServletRequest request, Model model, String senderUsername) {
+        Transaction transaction = new Transaction();
+        var transactions = controllerService.getSentTransactionsByUsername(senderUsername);
+        var relationsUsernames = controllerService.getRelationsUsernamesByUsername(senderUsername);
+        model.addAttribute("transaction", transaction);
+        model.addAttribute("transactions", transactions);
+        model.addAttribute("relationsUsernames", relationsUsernames);
+        model.addAttribute("currentUrl", request.getRequestURI());
     }
 
 }

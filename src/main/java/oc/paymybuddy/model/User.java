@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
@@ -20,9 +21,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private int id;
+
+    @NotEmpty(message = "Username est obligatoire")
     private String username;
+
+    @NotEmpty(message = "Mot de passe est obligatoire")
     private String password;
+
+    @NotEmpty(message = "Mail est obligatoire")
     private String email;
+
     private double balance;
 
     @OneToMany(

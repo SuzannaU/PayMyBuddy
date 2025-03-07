@@ -1,0 +1,80 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#information-content {
+    width: 709px;
+    /*height: 317px;*/
+    margin-top: 80px;
+    top: 119px;
+    left: 40px;
+}
+
+#information-content .row{
+    margin-bottom: 10px;
+}
+
+.update-info{
+    width: 511px;
+    height: 56px;
+    gap: 12px;
+    padding: 14px 16px;
+}
+
+.label{
+    width: 141px;
+    height: 28px;
+
+    font-family: Inter, sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 140%;
+    letter-spacing: 0;
+    color: black;
+}
+
+.update-info .input{
+    border: none;
+    width: 297px;
+    display: flex;
+    flex-direction: row;
+}
+
+.update-info .input .input{
+    width: 297px;
+    height: 28px;
+    padding-left: 10px;
+}
+
+.update-info .input .input::placeholder {
+    font-family: Inter, sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 140%;
+    letter-spacing: 0;
+    color: black;
+}
+
+form[name="update-password"]{
+    display: flex;
+    flex-direction: row;
+}
+
+#modify-button button.btn {
+    border: none;
+    border-radius: 8px;
+    padding: 14px 24px;
+    background-color: #F69F1D;
+    box-shadow: 0 1px 2px 0 #0000000D;
+
+    text-align: center;
+    vertical-align: center;
+    font-family: Inter, sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 150%;
+    letter-spacing: 0;
+    color: white;
+}

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <link rel="stylesheet" href="/css/styles.css"/>
-    <title>Login</title>
+    <title>Se connecter</title>
 </head>
 <body>
 <div class="login-form">
@@ -12,11 +12,16 @@
             <button type="button" class="title-btn">Pay My Buddy</button>
         </div>
         <div class="login-inputs">
-            <div class="login-mb-3">
-                <input type="email" class="form-control" id="username" name="username" placeholder="Mail" autofocus>
+            <div th:if="${param.error}" class="alert alert-danger">
+                Identifiants incorrects. Veuillez réessayer.
             </div>
             <div class="login-mb-3">
-                <input type="password" class="form-control" id="password" name="password" placeholder="Mot de passe">
+                <input type="email" class="form-control" id="username" name="username"
+                       placeholder="Mail" required autofocus>
+            </div>
+            <div class="login-mb-3">
+                <input type="password" class="form-control" id="password" name="password"
+                       placeholder="Mot de passe" required>
             </div>
         </div>
         <div class="login-form-actions">

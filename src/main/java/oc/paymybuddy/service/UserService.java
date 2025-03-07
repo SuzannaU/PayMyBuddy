@@ -1,8 +1,6 @@
 package oc.paymybuddy.service;
 
-import oc.paymybuddy.exceptions.ExistingEmailException;
-import oc.paymybuddy.exceptions.ExistingUsernameException;
-import oc.paymybuddy.exceptions.TooLongException;
+import oc.paymybuddy.exceptions.*;
 import oc.paymybuddy.model.User;
 import oc.paymybuddy.repository.UserRepo;
 import org.slf4j.Logger;
@@ -31,10 +29,12 @@ public class UserService {
             throw new ExistingUsernameException();
         } else if (isAnExistingEmail(user.getEmail())) {
             throw new ExistingEmailException();
-        } else if (user.getUsername().length() > 45
-                || user.getEmail().length() > 100
-                || user.getPassword().length() > 45) {
-            throw new TooLongException();
+        } else if (user.getUsername().length() > 45) {
+            throw new TooLongUsernameException();
+        } else if (user.getEmail().length() > 100) {
+            throw new TooLongEmailException();
+        } else if (user.getPassword().length() > 45) {
+            throw new TooLongPasswordException();
         } else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             logger.debug("Encoded Password: " + user.getPassword());
@@ -42,34 +42,37 @@ public class UserService {
         }
     }
 
-    public User updateUsername(User user, String newUsername) {
+    public User updateUsername(String currentUsername, String newUsername) {
         if (isAnExistingUsername(newUsername)) {
             throw new ExistingUsernameException();
         } else if (newUsername.length() > 45) {
-            throw new TooLongException();
+            throw new TooLongUsernameException();
         } else {
+            User user = getUserByUsername(currentUsername);
             user.setUsername(newUsername);
             logger.debug("Username updated to: " + user.getUsername());
             return userRepo.save(user);
         }
     }
 
-    public User updateEmail(User user, String newEmail) {
+    public User updateEmail(String username, String newEmail) {
         if (isAnExistingEmail(newEmail)) {
             throw new ExistingEmailException();
         } else if (newEmail.length() > 100) {
-            throw new TooLongException();
+            throw new TooLongEmailException();
         } else {
+            User user = getUserByUsername(username);
             user.setEmail(newEmail);
             logger.debug("Email updated to: " + user.getEmail());
             return userRepo.save(user);
         }
     }
 
-    public User updatePassword(User user, String newPassword){
+    public User updatePassword(String username, String newPassword){
         if (newPassword.length() > 45) {
-            throw new TooLongException();
+            throw new TooLongPasswordException();
         } else {
+            User user = getUserByUsername(username);
             user.setPassword(passwordEncoder.encode(newPassword));
             logger.debug("Password updated");
             return userRepo.save(user);
@@ -104,21 +107,13 @@ public class UserService {
     }
 
     public boolean isAnExistingUsername(String username) {
+
         return userRepo.findByUsername(username).isPresent();
     }
 
     public boolean isAnExistingEmail(String email) {
+
         return userRepo.findByEmail(email).isPresent();
     }
 
-    // dev utilities
-    public List<User> getAllUsers() {
-        return userRepo.findAll();
-    }
-
-    public void motherlode(int userId, double newBalance) {
-        User user = userRepo.findById(userId).get();
-        user.setBalance(newBalance);
-        userRepo.save(user);
-    }
 }

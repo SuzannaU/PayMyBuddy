@@ -128,14 +128,15 @@ public class UserServiceTest {
 
     @Test
     public void updateUsername_withCorrectParameters_returnsUser() {
-        when(userRepo.findByUsername(anyString())).thenReturn(Optional.empty());
+        when(userRepo.findByUsername("newUsername")).thenReturn(Optional.empty());
+        when(userRepo.findByUsername("username1")).thenReturn(Optional.of(user1));
         when(userRepo.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        User user = userService.updateUsername(user1, "newUsername");
+        User user = userService.updateUsername("username1", "newUsername");
 
         assertNotNull(user);
         assertEquals("newUsername", user.getUsername());
-        verify(userRepo).findByUsername(anyString());
+        verify(userRepo, times(2)).findByUsername(anyString());
         verify(userRepo).save(any());
     }
 
@@ -144,7 +145,7 @@ public class UserServiceTest {
         when(userRepo.findByUsername(anyString())).thenReturn(Optional.of(user1));
 
         assertThrows(ExistingUsernameException.class,
-                () -> userService.updateUsername(user1, "newUsername"));
+                () -> userService.updateUsername("username1", "newUsername"));
 
         verify(userRepo).findByUsername(anyString());
         verify(userRepo, never()).save(any());
@@ -155,7 +156,7 @@ public class UserServiceTest {
         when(userRepo.findByUsername(anyString())).thenReturn(Optional.empty());
 
         assertThrows(TooLongException.class,
-                () -> userService.updateUsername(user1, "a".repeat(46)));
+                () -> userService.updateUsername("username1", "a".repeat(46)));
 
         verify(userRepo).findByUsername(anyString());
         verify(userRepo, never()).save(any());
@@ -163,14 +164,16 @@ public class UserServiceTest {
 
     @Test
     public void updateEmail_withCorrectParameters_returnsUser() {
-        when(userRepo.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(userRepo.findByEmail("newEmail")).thenReturn(Optional.empty());
+        when(userRepo.findByUsername("username1")).thenReturn(Optional.of(user1));
         when(userRepo.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        User user = userService.updateEmail(user1, "newEmail");
+        User user = userService.updateEmail("username1", "newEmail");
 
         assertNotNull(user);
         assertEquals("newEmail", user.getEmail());
         verify(userRepo).findByEmail(anyString());
+        verify(userRepo).findByUsername(anyString());
         verify(userRepo).save(any());
 
     }
@@ -180,7 +183,7 @@ public class UserServiceTest {
         when(userRepo.findByEmail(anyString())).thenReturn(Optional.of(user1));
 
         assertThrows(ExistingEmailException.class,
-                () -> userService.updateEmail(user1, "newEmail"));
+                () -> userService.updateEmail("username1", "newEmail"));
 
         verify(userRepo).findByEmail(anyString());
         verify(userRepo, never()).save(any());
@@ -191,7 +194,7 @@ public class UserServiceTest {
         when(userRepo.findByEmail(anyString())).thenReturn(Optional.empty());
 
         assertThrows(TooLongException.class,
-                () -> userService.updateEmail(user1, "a".repeat(101)));
+                () -> userService.updateEmail("username1", "a".repeat(101)));
 
         verify(userRepo).findByEmail(anyString());
         verify(userRepo, never()).save(any());
@@ -199,13 +202,15 @@ public class UserServiceTest {
 
     @Test
     public void updatePassword_withCorrectParameters_returnsUser() {
+        when(userRepo.findByUsername("username1")).thenReturn(Optional.of(user1));
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(userRepo.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        User user = userService.updatePassword(user1, "newPassword");
+        User user = userService.updatePassword("username1", "newPassword");
 
         assertNotNull(user);
         assertEquals("encodedPassword", user.getPassword());
+        verify(userRepo).findByUsername(anyString());
         verify(passwordEncoder).encode(anyString());
         verify(userRepo).save(any());
     }
@@ -213,7 +218,7 @@ public class UserServiceTest {
     @Test
     public void updatePassword_withTooLongPassword_throwsException() {
 
-        assertThrows(TooLongException.class, () -> userService.updatePassword(user1, "a".repeat(46)));
+        assertThrows(TooLongException.class, () -> userService.updatePassword("username1", "a".repeat(46)));
 
         verify(passwordEncoder, never()).encode(anyString());
         verify(userRepo, never()).save(any());

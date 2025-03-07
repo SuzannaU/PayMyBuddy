@@ -1,5 +1,6 @@
 package oc.paymybuddy.service;
 
+import oc.paymybuddy.exceptions.ExistingRelationException;
 import oc.paymybuddy.model.Relation;
 import oc.paymybuddy.model.RelationId;
 import oc.paymybuddy.model.User;
@@ -23,8 +24,13 @@ public class RelationService {
     }
 
     public Relation addRelation(User invitingUser, User invitedUser) {
+        Set<String> existingRelations = getRelationsUsernamesByUser(invitingUser);
+        if (existingRelations.contains(invitedUser.getUsername())) {
+            logger.error("this relation already exists");
+            throw new ExistingRelationException();
+        }
         Relation relation = new Relation();
-        relation.setRelationId(new RelationId(invitingUser.getId(),  invitedUser.getId()));
+        relation.setRelationId(new RelationId(invitingUser.getId(), invitedUser.getId()));
         relation.setInvitingUser(invitingUser);
         relation.setInvitedUser(invitedUser);
         logger.debug("Adding relation between {} and {}",

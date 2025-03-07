@@ -43,7 +43,13 @@ public class ControllerService {
         return relationService.getRelationsUsernamesByUser(user);
     }
 
-    public Transaction transfer(String senderUsername, String receiverUsername, String description, String stringAmount) {
+    public List<Transaction> getSentTransactionsByUsername(String username) {
+        User user = userService.getUserByUsername(username);
+        return transactionService.getSentTransactionsByUser(user);
+    }
+
+    public Transaction transfer(
+            String senderUsername, String receiverUsername, String description, String stringAmount) {
         User sender = userService.getUserByUsername(senderUsername);
         User receiver = userService.getUserByUsername(receiverUsername);
         double amount = Double.parseDouble(stringAmount);
@@ -54,20 +60,8 @@ public class ControllerService {
         throw new UnsufficientFundsException();    // handle in upper layer
     }
 
-//    public Transaction transfer(User sender, User receiver, String description, double amount) {
-//        if (sender.getBalance() >= amount) {
-//            userService.updateBalances(sender, receiver, amount);
-//            return transactionService.addTransaction(sender, receiver, description, amount);
-//        }
-//        throw new UnsufficientFundsException();    // handle in upper layer
-//    }
-
-    public List<Transaction> getSentTransactionsByUsername(String username) {
-        User user = userService.getUserByUsername(username);
-        return transactionService.getSentTransactionsByUser(user);
-    }
-
     public User getUserByUsername(String username) {
+
         return userService.getUserByUsername(username);
     }
 
@@ -79,7 +73,18 @@ public class ControllerService {
         return registeredUser;
     }
 
-    public void updateUser(User user) {
+    public User updateUsername(String currentUsername, String newUsername) {
+        logger.debug("ControllerService/updateUsername method called");
+        return userService.updateUsername(currentUsername, newUsername);
+    }
 
+    public User updateEmail(String currentUsername, String newEmail) {
+        logger.debug("ControllerService/updateEmail method called");
+        return userService.updateEmail(currentUsername, newEmail);
+    }
+
+    public User updatePassword(String currentUsername, String newPassword) {
+        logger.debug("ControllerService/updatePassword method called");
+        return userService.updatePassword(currentUsername, newPassword);
     }
 }

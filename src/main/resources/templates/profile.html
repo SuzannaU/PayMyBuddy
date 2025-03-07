@@ -4,48 +4,85 @@
       xmlns:th="http://www.thymeleaf.org"
       layout:decorate="~{layouts/main-layout.html}">
 <head>
+    <link rel="stylesheet" href="/css/profile.css"/>
+    <title>Profil</title>
 </head>
 <body>
 
 <div class="container" layout:fragment="content">
-
-    <form name="profile-content" th:action="@{/update-user}" th:object="${currentUser}" method="post">
-        <div class="row" id="information-content">
-            <div class="col-7">
-                <div class="row" id="profile-username">
-                    <div class="col-5">
-                        <span>Username</span>
+    <div class="row" id="information-content">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-9">
+                    <div class="row">
+                        <form name="update-username" th:action="@{/update-username}" method="post">
+                            <div class="row update-info" id="profile-username">
+                                <div class="col label">
+                                    <label for="username">Username</label>
+                                </div>
+                                <div class="col input">
+                                    <input type="text" id="username" name="username" class="input"
+                                           th:placeholder="${currentUser.getUsername()}"/>
+                                    <button type="submit" class="btn p-0 border-0 bg-transparent">
+                                        <i class="bi bi-chevron-right" title="Modifier le nom d'utilisateur"></i>
+                                    </button>
+                                </div>
+                                <div class="col-12 text-danger" th:if="${usernameError}">
+                                    <p th:text="${usernameError}"></p>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <div class="col-7">
-                        <span th:text="${currentUser.getUsername()}"></span>
-                        <i class="bi bi-chevron-right"></i>
-                    </div>
-                </div>
-                <div class="row" id="profile-email">
-                    <div class="col-5">
-                        <span>Mail</span>
-                    </div>
-                    <div class="col-7">
-                        <span th:text="${currentUser.getEmail()}"></span>
-                        <i class="bi bi-chevron-right"></i>
-                    </div>
-                </div>
-                <div class="row" id="profile-password">
-                    <div class="col-5">
-                        <span>Mot de passe</span>
-                    </div>
-                    <div class="col-7">
-                        <span>mot de passe</span>
-                        <i class="bi bi-chevron-right"></i>
+                    <div class="row">
+                        <form name="update-email" th:action="@{/update-email}" method="post">
+                            <div class="row update-info" id="profile-email">
+                                <div class="col label">
+                                    <label for="email">Mail</label>
+                                </div>
+                                <div class="col input">
+                                    <input type="text" id="email" name="email" class="input"
+                                           th:placeholder="${currentUser.getEmail()}"/>
+                                    <button type="submit" class="btn p-0 border-0 bg-transparent">
+                                        <i class="bi bi-chevron-right" title="Modifier l'email"></i>
+                                    </button>
+                                </div>
+                                <div class="col-12 text-danger" th:if="${emailError}">
+                                    <p th:text="${emailError}"></p>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-            <div class="col-5" id="modify-button">
-                <button type="submit" class="btn">Modifier</button>
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <form name="update-password" th:action="@{/update-password}" method="post">
+                            <div class="col-9">
+                                <div class="row update-info" id="profile-password">
+                                    <div class="col label">
+                                        <label for="password">Mot de passe</label>
+                                    </div>
+                                    <div class="col input">
+                                        <input type="password" id="password" name="password" class="input"
+                                               placeholder="mot de passe"/>
+                                    </div>
+                                    <div class="col-12 text-danger" th:if="${passwordError}">
+                                        <p th:text="${passwordError}"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3" id="modify-button">
+                                <button type="submit" class="btn">Modifier</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
-    </form>
+    </div>
 </div>
+
 
 </body>
 </html>

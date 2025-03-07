@@ -1,6 +1,9 @@
 package oc.paymybuddy.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import oc.paymybuddy.exceptions.ExistingRelationException;
+import oc.paymybuddy.exceptions.UserNotFoundException;
+import oc.paymybuddy.model.User;
 import oc.paymybuddy.service.ControllerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,10 +34,22 @@ public class RelationController {
     }
 
     @PostMapping("/add-relation")
-    public String addRelation(@RequestParam String invitedUserEmail, HttpServletRequest request) {
+    public String addRelation(@RequestParam String invitedUserEmail,Model model, HttpServletRequest request) {
         logger.debug("POST addRelation");
         String invitingUsername = request.getUserPrincipal().getName();
-        controllerService.addRelation(invitingUsername, invitedUserEmail);
+        try {
+            controllerService.addRelation(invitingUsername, invitedUserEmail);
+        }  catch (UserNotFoundException e) {
+            logger.error("User with this email not found");
+            model.addAttribute("currentUrl", request.getRequestURI());
+            model.addAttribute("relationError", "L'email n'existe pas");
+            return "add-relation";
+        }  catch (ExistingRelationException e2) {
+            logger.error("This relation already exists");
+            model.addAttribute("currentUrl", request.getRequestURI());
+            model.addAttribute("relationError", "Cet utilisateur est déjà une relation.");
+            return "add-relation";
+        }
         return "redirect:/add-relation";
     }
 

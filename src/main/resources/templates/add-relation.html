@@ -4,6 +4,7 @@
       layout:decorate="~{layouts/main-layout.html}">
 <head>
     <link rel="stylesheet" href="/css/add-relation.css"/>
+    <title>Ajouter relation</title>
 </head>
 <body>
 
@@ -21,6 +22,9 @@
                 <div class="col d-flex align-items-center" id="add-relation-action">
                     <button type="submit" class="btn">Ajouter</button>
                 </div>
+            </div>
+            <div class="col-12 text-danger" th:if="${relationError}">
+                <p th:text="${relationError}"></p>
             </div>
         </form>
 

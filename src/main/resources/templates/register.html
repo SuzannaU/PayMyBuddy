@@ -3,27 +3,39 @@
 <head>
     <meta charset="UTF-8"/>
     <link rel="stylesheet" href="/css/styles.css"/>
-    <title>Register</title>
+    <title>S'inscrire</title>
 </head>
 <body>
 <div class="register-form">
-    <form name="register-form" th:action="@{/register}" th:object="${user}" method="post">
+    <form class="form-control" name="register-form" th:action="@{/register}" th:object="${user}" method="post">
         <div class="register-title">
             <button type="button" class="title-btn">Pay My Buddy</button>
         </div>
         <div class="register-inputs">
             <div class="register-mb-3">
-                <input type="text" th:field="*{username}" maxlength="45" required placeholder="Username" autofocus/>
+                <input type="text" minlength="5" maxlength="45" placeholder="Username" required autofocus
+                       th:field="${user.username}"/>
+                <p th:if="${#fields.hasErrors('username')}"
+                   th:errorclass="text-danger"
+                   th:errors="${user.username}"></p>
             </div>
             <div class="register-mb-3">
-                <input type="email" th:field="*{email}" maxlength="100" required placeholder="Mail"/>
+                <input type="email" minlength="5" maxlength="100" placeholder="Mail" required
+                       th:field="${user.email}"/>
+                <p th:if="${#fields.hasErrors('email')}"
+                   th:errorclass="text-danger"
+                   th:errors="${user.email}"></p>
             </div>
             <div class="register-mb-3">
-                <input type="password" th:field="*{password}" maxlength="45" required placeholder="Mot de passe"/>
+                <input type="password" minlength="5" maxlength="45" placeholder="Mot de passe" required
+                       th:field="${user.password}"/>
+                <p th:if="${#fields.hasErrors('password')}"
+                   th:errorclass="text-danger"
+                   th:errors="${user.password}"></p>
             </div>
         </div>
         <div class="register-form-actions">
-            <button type="submit" class="btn">Register</button>
+            <button type="submit" class="btn">S'inscrire</button>
         </div>
     </form>
 </div>
