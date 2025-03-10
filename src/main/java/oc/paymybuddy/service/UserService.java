@@ -24,7 +24,7 @@ public class UserService {
     }
 
     public User registerUser(User user) {
-        logger.debug("UserService/registerUser method called");
+        logger.debug("registerUser method called");
         if (isAnExistingUsername(user.getUsername())) {
             throw new ExistingUsernameException();
         } else if (isAnExistingEmail(user.getEmail())) {
@@ -93,7 +93,7 @@ public class UserService {
         if (optUser.isPresent()) {
             return optUser.get();
         } else {
-            throw new UsernameNotFoundException(username);
+            throw new UserNotFoundException();
         }
     }
 
@@ -102,7 +102,7 @@ public class UserService {
         if (optUser.isPresent()) {
             return optUser.get();
         } else {
-            throw new UsernameNotFoundException(email);
+            throw new UserNotFoundException();
         }
     }
 

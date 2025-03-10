@@ -33,19 +33,4 @@ public class Controller {
     public String getLoginError() {
         return "login-error";
     }
-
-
-//
-//    private StringBuffer getUsernamePasswordLoginInfo(Principal principal) {
-//        StringBuffer usernameInfo = new StringBuffer();
-//
-//        UsernamePasswordAuthenticationToken token = ((UsernamePasswordAuthenticationToken) principal);
-//        if (token.isAuthenticated()) {
-//            org.springframework.security.core.userdetails.User u = (org.springframework.security.core.userdetails.User) token.getPrincipal();
-//            usernameInfo.append("Welcome, " + u.getUsername());
-//        } else {
-//            usernameInfo.append("NA");
-//        }
-//        return usernameInfo;
-//    }
 }

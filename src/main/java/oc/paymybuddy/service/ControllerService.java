@@ -31,11 +31,11 @@ public class ControllerService {
     public Relation addRelation(String invitingUsername, String invitedUserEmail) {
 
         if (userService.isAnExistingEmail(invitedUserEmail)) {
-            User invitedUser = userService.getUserByEmail(invitedUserEmail);
             User invitingUser = userService.getUserByUsername(invitingUsername);
+            User invitedUser = userService.getUserByEmail(invitedUserEmail);
             return relationService.addRelation(invitingUser, invitedUser);
         }
-        throw new UserNotFoundException();    // handle in upper layer
+        throw new UserNotFoundException();
     }
 
     public Set<String> getRelationsUsernamesByUsername(String username) {
@@ -49,7 +49,11 @@ public class ControllerService {
     }
 
     public Transaction transfer(
-            String senderUsername, String receiverUsername, String description, String stringAmount) {
+            String senderUsername,
+            String receiverUsername,
+            String description,
+            String stringAmount) {
+
         User sender = userService.getUserByUsername(senderUsername);
         User receiver = userService.getUserByUsername(receiverUsername);
         double amount = Double.parseDouble(stringAmount);
@@ -57,7 +61,7 @@ public class ControllerService {
             userService.updateBalances(sender, receiver, amount);
             return transactionService.addTransaction(sender, receiver, description, amount);
         }
-        throw new UnsufficientFundsException();    // handle in upper layer
+        throw new UnsufficientFundsException();
     }
 
     public User getUserByUsername(String username) {
@@ -66,10 +70,9 @@ public class ControllerService {
     }
 
     public User registerUser(User user) {
-        logger.debug("ControllerService/registerUser method called");
+        logger.debug("registerUser method called");
         User registeredUser = userService.registerUser(user);
         userRoleService.assignRoleToUser(user, roleService.getRoleByRoleName(Roles.USER.name()));
-        logger.debug("registerUser method called");
         return registeredUser;
     }
 

@@ -22,7 +22,6 @@ public class TransactionService {
     }
 
     public Transaction addTransaction(User sender, User receiver, String description, double amount) {
-        logger.debug("length of description: " + description.length());
         if (description.length() > 250) {
             logger.error("description length exceeds 250 characters");
             throw new TooLongException();
@@ -36,8 +35,7 @@ public class TransactionService {
     }
 
     public List<Transaction> getSentTransactionsByUser(User user) {
-        List<Transaction> transactions = transactionRepo.findAllBySender(
+        return transactionRepo.findAllBySender(
                 user, Sort.by(Sort.Direction.DESC, "id"));
-        return transactions;
     }
 }

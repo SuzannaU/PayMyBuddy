@@ -1,15 +1,12 @@
 package oc.paymybuddy.service;
 
-import oc.paymybuddy.exceptions.ExistingEmailException;
-import oc.paymybuddy.exceptions.ExistingUsernameException;
-import oc.paymybuddy.exceptions.TooLongException;
+import oc.paymybuddy.exceptions.*;
 import oc.paymybuddy.model.User;
 import oc.paymybuddy.repository.UserRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
@@ -38,27 +35,29 @@ public class UserServiceTest {
     }
 
     @Test
-    public void registerUser_withCorrectParameters_returnsUser() {
+    public void registerUser_withCorrectParameters_callsRepoAndReturnsUser() {
         user1.setUsername("username1");
         user1.setEmail("email1");
         user1.setPassword("password1");
         when(userRepo.findByUsername(anyString())).thenReturn(Optional.empty());
         when(userRepo.findByEmail(anyString())).thenReturn(Optional.empty());
-        when(passwordEncoder.encode(anyString())).thenReturn("password");
+        when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(userRepo.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         User user = userService.registerUser(user1);
 
         assertNotNull(user);
-        assertEquals("password", user.getPassword());
-        verify(passwordEncoder).encode(anyString());
+        assertEquals("username1", user.getUsername());
+        assertEquals("email1", user.getEmail());
+        assertEquals("encodedPassword", user.getPassword());
         verify(userRepo).findByUsername(anyString());
         verify(userRepo).findByEmail(anyString());
+        verify(passwordEncoder).encode(anyString());
         verify(userRepo).save(any());
     }
 
     @Test
-    public void registerUser_withExistingUsername_throwsException() {
+    public void registerUser_withExistingUsername_doesNotCallAndThrowsException() {
         user1.setUsername("username1");
         user1.setEmail("email1");
         user1.setPassword("password1");
@@ -71,7 +70,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void registerUser_withExistingEmail_throwsException() {
+    public void registerUser_withExistingEmail_doesNotCallAndThrowsException() {
         user1.setUsername("username1");
         user1.setEmail("email1");
         user1.setPassword("password1");
@@ -85,49 +84,49 @@ public class UserServiceTest {
     }
 
     @Test
-    public void registerUser_withTooLongUsername_throwsException() {
+    public void registerUser_withTooLongUsername_doesNotCallAndThrowsException() {
         user1.setUsername("a".repeat(46));
         user1.setEmail("email1");
         user1.setPassword("password1");
         when(userRepo.findByUsername(anyString())).thenReturn(Optional.empty());
         when(userRepo.findByEmail(anyString())).thenReturn(Optional.empty());
 
-        assertThrows(TooLongException.class, () -> userService.registerUser(user1));
+        assertThrows(TooLongUsernameException.class, () -> userService.registerUser(user1));
 
         verify(passwordEncoder, never()).encode(anyString());
         verify(userRepo, never()).save(any());
     }
 
     @Test
-    public void registerUser_withTooLongEmail_throwsException() {
+    public void registerUser_withTooLongEmail_doesNotCallAndThrowsException() {
         user1.setUsername("username1");
         user1.setEmail("a".repeat(101));
         user1.setPassword("password1");
         when(userRepo.findByUsername(anyString())).thenReturn(Optional.empty());
         when(userRepo.findByEmail(anyString())).thenReturn(Optional.empty());
 
-        assertThrows(TooLongException.class, () -> userService.registerUser(user1));
+        assertThrows(TooLongEmailException.class, () -> userService.registerUser(user1));
 
         verify(passwordEncoder, never()).encode(anyString());
         verify(userRepo, never()).save(any());
     }
 
     @Test
-    public void registerUser_withTooLongPassword_throwsException() {
+    public void registerUser_withTooLongPassword_doesNotCallAndThrowsException() {
         user1.setUsername("username1");
         user1.setEmail("email1");
         user1.setPassword("a".repeat(46));
         when(userRepo.findByUsername(anyString())).thenReturn(Optional.empty());
         when(userRepo.findByEmail(anyString())).thenReturn(Optional.empty());
 
-        assertThrows(TooLongException.class, () -> userService.registerUser(user1));
+        assertThrows(TooLongPasswordException.class, () -> userService.registerUser(user1));
 
         verify(passwordEncoder, never()).encode(anyString());
         verify(userRepo, never()).save(any());
     }
 
     @Test
-    public void updateUsername_withCorrectParameters_returnsUser() {
+    public void updateUsername_withCorrectParameters_callsRepoAndReturnsUser() {
         when(userRepo.findByUsername("newUsername")).thenReturn(Optional.empty());
         when(userRepo.findByUsername("username1")).thenReturn(Optional.of(user1));
         when(userRepo.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
@@ -141,7 +140,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void updateUsername_withExistingUsername_throwsException() {
+    public void updateUsername_withExistingUsername_doesNotCallAndThrowsException() {
         when(userRepo.findByUsername(anyString())).thenReturn(Optional.of(user1));
 
         assertThrows(ExistingUsernameException.class,
@@ -152,10 +151,10 @@ public class UserServiceTest {
     }
 
     @Test
-    public void updateUsername_withTooLongUsername_throwsException() {
+    public void updateUsername_withTooLongUsername_doesNotCallAndThrowsException() {
         when(userRepo.findByUsername(anyString())).thenReturn(Optional.empty());
 
-        assertThrows(TooLongException.class,
+        assertThrows(TooLongUsernameException.class,
                 () -> userService.updateUsername("username1", "a".repeat(46)));
 
         verify(userRepo).findByUsername(anyString());
@@ -163,7 +162,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void updateEmail_withCorrectParameters_returnsUser() {
+    public void updateEmail_withCorrectParameters_callsRepoAndReturnsUser() {
         when(userRepo.findByEmail("newEmail")).thenReturn(Optional.empty());
         when(userRepo.findByUsername("username1")).thenReturn(Optional.of(user1));
         when(userRepo.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
@@ -179,7 +178,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void updateEmail_withExistingEmail_throwsException() {
+    public void updateEmail_withExistingEmail_doesNotCallAndThrowsException() {
         when(userRepo.findByEmail(anyString())).thenReturn(Optional.of(user1));
 
         assertThrows(ExistingEmailException.class,
@@ -190,10 +189,10 @@ public class UserServiceTest {
     }
 
     @Test
-    public void updateEmail_withTooLongEmail_throwsException() {
+    public void updateEmail_withTooLongEmail_doesNotCallAndThrowsException() {
         when(userRepo.findByEmail(anyString())).thenReturn(Optional.empty());
 
-        assertThrows(TooLongException.class,
+        assertThrows(TooLongEmailException.class,
                 () -> userService.updateEmail("username1", "a".repeat(101)));
 
         verify(userRepo).findByEmail(anyString());
@@ -216,16 +215,17 @@ public class UserServiceTest {
     }
 
     @Test
-    public void updatePassword_withTooLongPassword_throwsException() {
+    public void updatePassword_withTooLongPassword_doesNotCallAndThrowsException() {
 
-        assertThrows(TooLongException.class, () -> userService.updatePassword("username1", "a".repeat(46)));
+        assertThrows(TooLongPasswordException.class,
+                () -> userService.updatePassword("username1", "a".repeat(46)));
 
         verify(passwordEncoder, never()).encode(anyString());
         verify(userRepo, never()).save(any());
     }
 
     @Test
-    public void updateBalances_withCorrectParameters_updatesUsers() {
+    public void updateBalances_withCorrectParameters_callsRepo() {
         user1.setBalance(10);
         user2.setBalance(20);
         when(userRepo.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
@@ -238,7 +238,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getUserByUsername_withCorrectParameters_returnsUser() {
+    public void getUserByUsername_withCorrectParameters_callsRepoAndReturnsUser() {
         user1.setUsername("username1");
         when(userRepo.findByUsername(anyString())).thenReturn(Optional.of(user1));
 
@@ -253,13 +253,34 @@ public class UserServiceTest {
     public void getUserByUsername_withNonExistingUsername_throwsException() {
         when(userRepo.findByUsername(anyString())).thenReturn(Optional.empty());
 
-        assertThrows(UsernameNotFoundException.class,() -> userService.getUserByUsername("nonExistingUsername"));
+        assertThrows(UserNotFoundException.class,() -> userService.getUserByUsername("nonExistingUsername"));
 
         verify(userRepo).findByUsername(anyString());
     }
 
     @Test
-    public void isAnExistingUsername_withExistingUsername_returnsTrue() {
+    public void getUserByEmail_withCorrectParameters_callsRepoAndReturnsUser() {
+        user1.setEmail("email1");
+        when(userRepo.findByEmail(anyString())).thenReturn(Optional.of(user1));
+
+        User user = userService.getUserByEmail("email1");
+
+        assertNotNull(user);
+        assertEquals(user1.getEmail(), user.getEmail());
+        verify(userRepo).findByEmail(anyString());
+    }
+
+    @Test
+    public void getUserByEmail_withNonExistingEmail_throwsException() {
+        when(userRepo.findByUsername(anyString())).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class,() -> userService.getUserByEmail("nonExistingUsername"));
+
+        verify(userRepo).findByEmail(anyString());
+    }
+
+    @Test
+    public void isAnExistingUsername_withExistingUsername_callsRepoAndReturnsTrue() {
         user1.setUsername("username1");
         when(userRepo.findByUsername(anyString())).thenReturn(Optional.of(user1));
         assertTrue(userService.isAnExistingUsername("username1"));

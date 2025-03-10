@@ -35,7 +35,7 @@ public class TransactionServiceTest {
     }
 
     @Test
-    public void addTransaction_withCorrectParameters_returnsTransaction() {
+    public void addTransaction_withCorrectParameters_callsRepoAndReturnsTransaction() {
         when(transactionRepo.save(any()))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -51,7 +51,7 @@ public class TransactionServiceTest {
     }
 
     @Test
-    public void addTransaction_withTooLongDescription_throwsException() {
+    public void addTransaction_withTooLongDescription_doesNotCallAndThrowsException() {
 
         assertThrows(TooLongException.class, () -> transactionService.addTransaction(
                 user1, user2, "d".repeat(251), 150.00));
@@ -61,7 +61,7 @@ public class TransactionServiceTest {
 
     @Test
     public void getTransactionsByUser_withCorrectParameters_returnsTransactions() {
-        when(transactionRepo.findAllBySender(user1, any(Sort.class))).thenReturn(new ArrayList<>());
+        when(transactionRepo.findAllBySender(any(), any(Sort.class))).thenReturn(new ArrayList<>());
         List<Transaction> transactions = transactionService.getSentTransactionsByUser(user1);
 
         assertNotNull(transactions);
