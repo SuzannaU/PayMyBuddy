@@ -3,7 +3,6 @@ package oc.paymybuddy.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import oc.paymybuddy.exceptions.ExistingRelationException;
 import oc.paymybuddy.exceptions.UserNotFoundException;
-import oc.paymybuddy.model.User;
 import oc.paymybuddy.service.ControllerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Set;
 
 @Controller
 public class RelationController {

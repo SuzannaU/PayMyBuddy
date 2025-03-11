@@ -1,6 +1,5 @@
 package oc.paymybuddy.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.persistence.Embeddable;
 
 import java.io.Serializable;
