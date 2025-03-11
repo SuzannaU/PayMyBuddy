@@ -52,13 +52,4 @@ public class RelationController {
         }
         return "redirect:/add-relation";
     }
-
-
-    @GetMapping("/relations-usernames")
-    public Set<String> getPrincipalRelationsUsernames(HttpServletRequest request) {
-        return controllerService.getRelationsUsernamesByUsername(request.getUserPrincipal().getName());
-    }
-
-
-
 }

@@ -23,7 +23,7 @@ public class TransactionController {
 
 
     @GetMapping("/transfer")
-    public String getPrincipalTransactions(HttpServletRequest request, Model model) {
+    public String getTransfer(HttpServletRequest request, Model model) {
         String senderUsername = request.getUserPrincipal().getName();
         setUpView(request, model, senderUsername);
         return "transfer";

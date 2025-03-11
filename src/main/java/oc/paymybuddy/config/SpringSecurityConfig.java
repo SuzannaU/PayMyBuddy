@@ -2,6 +2,7 @@ package oc.paymybuddy.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -28,6 +29,7 @@ public class SpringSecurityConfig {
         return http
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/").permitAll();
+                    auth.requestMatchers("/error").permitAll();
                     auth.requestMatchers("/css/**").permitAll();
                     auth.requestMatchers("/register").permitAll();
                     auth.requestMatchers("/add-relation").hasRole("USER");
@@ -35,18 +37,12 @@ public class SpringSecurityConfig {
                     auth.requestMatchers("/transfer").hasRole("USER");
                     auth.anyRequest().authenticated();
                 })
-                //.formLogin(Customizer.withDefaults()) // comment to log in through pop up instead of form
                 .formLogin(form->form
                         .loginPage("/login")
+                        .loginProcessingUrl("/perform-login")
                         .defaultSuccessUrl("/transfer")
                         .failureUrl("/login?error=true")
                         .permitAll())
-//                .logout(logout -> logout
-//                        .logoutUrl("/logout")
-//                        .logoutSuccessUrl("/login?logout")
-//                )
-                .httpBasic(Customizer.withDefaults()) // this enables postman
-                //.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }

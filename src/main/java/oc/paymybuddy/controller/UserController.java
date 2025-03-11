@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @GetMapping("/register")
-    public String getRegisterFrom(Model model) {
+    public String getRegister(Model model) {
         User user = new User();
         model.addAttribute("user", user);
         return "register";
@@ -50,27 +50,27 @@ public class UserController {
         } catch (ExistingUsernameException e) {
             logger.error("Username already exists");
             result.addError(new FieldError(
-                    "user", "username", "Username already exists"));
+                    "user", "username", "Ce nom d'utilisateur existe déjà."));
             return "register";
         } catch (ExistingEmailException e) {
             logger.error("Email already exists");
             result.addError(new FieldError(
-                    "user", "email", "Email already exists"));
+                    "user", "email", "Ce mail existe déjà."));
             return "register";
         } catch (TooLongUsernameException e) {
             logger.error("username is too long");
             result.addError(new FieldError(
-                    "user", "username", "Username must be under 45 characters"));
+                    "user", "username", "Le nom d'utilisateur doit faire moins de 45 caractères"));
             return "register";
         } catch (TooLongEmailException e) {
             logger.error("email is too long");
             result.addError(new FieldError(
-                    "user", "email", "Email must be under 100 characters"));
+                    "user", "email", "L'email doit faire moins de 100 caractères"));
             return "register";
         } catch (TooLongPasswordException e) {
             logger.error("password is too long");
             result.addError(new FieldError(
-                    "user", "password", "Password must be under 45 characters"));
+                    "user", "password", "Le mot de passe doit faire moins de 45 caractères"));
             return "register";
         }
         return "redirect:/login";
@@ -103,7 +103,7 @@ public class UserController {
             User user = controllerService.getUserByUsername(currentUsername);
             model.addAttribute("currentUser", user);
             model.addAttribute("currentUrl", request.getRequestURI());
-            model.addAttribute("usernameError", "Le nom d'utilisateur doit faire moins de 45 charactères");
+            model.addAttribute("usernameError", "Le nom d'utilisateur doit faire moins de 45 caractères");
             return "profile";
         }
         return "redirect:/profile";
@@ -122,12 +122,12 @@ public class UserController {
             model.addAttribute("currentUrl", request.getRequestURI());
             model.addAttribute("emailError", "Ce mail existe déjà.");
             return "profile";
-        } catch (TooLongException e2) {
+        } catch (TooLongEmailException e2) {
             logger.error("email is too long");
             User user = controllerService.getUserByUsername(currentUsername);
             model.addAttribute("currentUser", user);
             model.addAttribute("currentUrl", request.getRequestURI());
-            model.addAttribute("emailError", "L'email doit faire moins de 100 charactères");
+            model.addAttribute("emailError", "L'email doit faire moins de 100 caractères");
             return "profile";
         }
         return "redirect:/profile";
@@ -144,7 +144,7 @@ public class UserController {
             User user = controllerService.getUserByUsername(currentUsername);
             model.addAttribute("currentUser", user);
             model.addAttribute("currentUrl", request.getRequestURI());
-            model.addAttribute("passwordError", "Le mot de passe doit faire moins de 45 charactères");
+            model.addAttribute("passwordError", "Le mot de passe doit faire moins de 45 caractères");
             return "profile";
         }
         return "redirect:/profile";
