@@ -1,6 +1,8 @@
 package oc.paymybuddy.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import oc.paymybuddy.model.Role;
 import oc.paymybuddy.model.Transaction;
 import oc.paymybuddy.model.User;
 import oc.paymybuddy.model.UserRole;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @TestPropertySource(properties = {
@@ -19,8 +22,6 @@ import oc.paymybuddy.model.UserRole;
         "spring.datasource.username=root",
         "spring.datasource.password=root"
 })
-
-
 public class RepositoriesTest {
 
     @Autowired
@@ -58,12 +59,19 @@ public class RepositoriesTest {
     }
 
     @Test
+    @Transactional
     public void findAllBySender_returnsTransactions() {
+        User sender = userRepo.findByUsername("user1").get();
+        User receiver = userRepo.findByUsername("user2").get();
+        Transaction transaction1 = new Transaction();
+        transaction1.setSender(sender);
+        transaction1.setReceiver(receiver);
+        transactionRepo.save(transaction1);
 
         user1 = userRepo.findByUsername("user1").get();
         List<Transaction> result = transactionRepo.findAllBySender(user1, null);
 
-        assertEquals(2, result.size());
+        assertEquals(1, result.size());
     }
 
     @Test

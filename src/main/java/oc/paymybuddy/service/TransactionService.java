@@ -21,7 +21,12 @@ public class TransactionService {
         this.transactionRepo = transactionRepo;
     }
 
-    public Transaction addTransaction(User sender, User receiver, String description, double amount) {
+    public Transaction addTransaction(
+            User sender,
+            User receiver,
+            String description,
+            double amount) {
+
         if (description.length() > 250) {
             logger.error("description length exceeds 250 characters");
             throw new TooLongException();

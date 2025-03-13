@@ -81,9 +81,9 @@ public class UserService {
         sender.setBalance(sender.getBalance() - amount);
         receiver.setBalance(receiver.getBalance() + amount);
         userRepo.save(sender);
-        logger.debug("Sender balance updated");
+        logger.debug("Sender balance updated to: " + sender.getBalance());
         userRepo.save(receiver);
-        logger.debug("Receiver balance updated");
+        logger.debug("Receiver balance updated  to: " + receiver.getBalance());
     }
 
     public User getUserByUsername(String username) {
