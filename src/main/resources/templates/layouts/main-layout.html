@@ -27,7 +27,9 @@
                 <a th:class="${currentUrl.startsWith('/transfer') ? 'nav-link active' : 'nav-link'}" href="/transfer">Transférer</a>
                 <a th:class="${currentUrl.startsWith('/profile') ? 'nav-link active' : 'nav-link'}" href="/profile">Profil</a>
                 <a th:class="${currentUrl.startsWith('/add-relation') ? 'nav-link active' : 'nav-link'}" href="/add-relation">Ajouter relation</a>
-                <a class="nav-link" href="/logout">Se déconnecter</a>
+                <form th:action="@{/logout}" method="post" class="nav-item m-0 d-flex align-items-center">
+                    <button type="submit" class="nav-link btn btn-link border-0 bg-transparent p-0">Se déconnecter</button>
+                </form>
             </div>
         </div>
     </div>

@@ -1,10 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Erreur</title>
+    <link rel="stylesheet" href="/css/error.css"/>
+    <title>Erreur - [[${status}]]</title>
 </head>
 <body>
+<div class="error-container">
+    <div class="error-header">
+        <div class="error-icon">⚠️</div>
+        <div>
+            <div class="error-code" th:text="${status}">404</div>
+            <h1 th:text="${error}">Erreur</h1>
+        </div>
+    </div>
 
+    <div class="error-message" th:text="${message}">
+        Une erreur s'est produite lors du traitement de votre demande.
+    </div>
+
+    <div class="error-details" th:if="${trace}">
+        <h3>Détails techniques:</h3>
+        <pre th:text="${trace}">Stack trace</pre>
+    </div>
+
+    <div class="error-actions">
+        <a href="/profile" class="btn">Retour au profil</a>
+    </div>
+</div>
 </body>
 </html>

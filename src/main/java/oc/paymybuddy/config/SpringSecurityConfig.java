@@ -39,7 +39,6 @@ public class SpringSecurityConfig {
                         .defaultSuccessUrl("/transfer")
                         .failureUrl("/login?error=true")
                         .permitAll())
-                .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }
 
