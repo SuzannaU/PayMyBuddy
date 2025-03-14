@@ -72,11 +72,11 @@ form[name="login-form"] {
 #username::placeholder,
 #email::placeholder,
 #password::placeholder {
-    opacity: 1; /* Assure que le placeholder est bien visible sur certains navigateurs */
+    opacity: 1; /* makes sure that placeholder is visible on some browsers */
 }
 
 .login-form-actions {
-    margin:0 150px 80px 150px;
+    margin:0 150px 10px 150px;
 }
 
 .login-form-actions button.btn {
@@ -84,7 +84,6 @@ form[name="login-form"] {
     height: 64px;
     border-radius: 8px;
     border: none;
-    /*padding: 14px 24px;*/
     gap: 8px;
     background-color: #207FEE;
     box-shadow: 0 1px 2px 0 #0000000D;
@@ -96,6 +95,15 @@ form[name="login-form"] {
     line-height: 36px;
     letter-spacing: 0;
     color: #FFFFFF;
+}
+
+.register-link{
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: center;
+    margin-bottom:80px;
 }
 
 /********************************** register form *************************************/

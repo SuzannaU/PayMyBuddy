@@ -21,6 +21,7 @@ public class UserRoleService {
     }
 
     public List<UserRole> getAllUserRolesByUser(User user) {
+
         return userRoleRepo.findAllByUser(user);
     }
 

@@ -68,9 +68,9 @@ CREATE TABLE IF NOT EXISTS `PayMyBuddy`.`transactions`
     ENGINE = InnoDB;
 
 INSERT INTO `PayMyBuddy`.`transactions` (`sender_id`, `receiver_id`, `description`, `amount`)
-VALUES (1, 2, 'Payment for lunch', 25.00),
-       (2, 3, 'Refund for movie tickets', 15.00),
-       (1, 2, 'Shared groceries', 50.00);
+VALUES (1, 2, 'Paiement du déjeuner', 25.00),
+       (2, 3, 'Remboursement du cinéma', 15.00),
+       (1, 2, 'Partage des courses', 50.00);
 
 
 -- -----------------------------------------------------

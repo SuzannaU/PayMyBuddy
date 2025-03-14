@@ -54,11 +54,4 @@ public class SpringSecurityConfig {
         authenticationProvider.setUserDetailsService(customUserDetailsService);
         return authenticationProvider;
     }
-//          add if necessary
-//    @Bean
-//    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-//        AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
-//        builder.authenticationProvider(authenticationProvider());
-//        return builder.build();
-//    }
 }
