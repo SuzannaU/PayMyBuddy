@@ -25,7 +25,8 @@ public class TransactionService {
             User sender,
             User receiver,
             String description,
-            double amount) {
+            double amount,
+            double fee) {
 
         if (description.length() > 250) {
             logger.error("description length exceeds 250 characters");
@@ -36,11 +37,17 @@ public class TransactionService {
         transaction.setReceiver(receiver);
         transaction.setDescription(description);
         transaction.setAmount(amount);
+        transaction.setFee(fee);
         return transactionRepo.save(transaction);
     }
 
     public List<Transaction> getSentTransactionsByUser(User user) {
         return transactionRepo.findAllBySender(
                 user, Sort.by(Sort.Direction.DESC, "id"));
+    }
+
+    //TODO fee calculation method (V1)
+    public double calculateFee(double netAmount) {
+        return 0;
     }
 }

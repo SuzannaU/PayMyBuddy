@@ -40,13 +40,14 @@ public class TransactionServiceTest {
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
         Transaction transaction = transactionService.addTransaction(
-                user1, user2, "description", 150.00);
+                user1, user2, "description", 150.00, 0);
 
         assertNotNull(transaction);
         assertEquals(user1, transaction.getSender());
         assertEquals(user2, transaction.getReceiver());
         assertEquals("description", transaction.getDescription());
         assertEquals(150.00, transaction.getAmount());
+        assertEquals(0.00, transaction.getFee());
         verify(transactionRepo).save(any());
     }
 
@@ -54,7 +55,7 @@ public class TransactionServiceTest {
     public void addTransaction_withTooLongDescription_doesNotCallAndThrowsException() {
 
         assertThrows(TooLongException.class, () -> transactionService.addTransaction(
-                user1, user2, "d".repeat(251), 150.00));
+                user1, user2, "d".repeat(251), 150.00, 0));
 
         verify(transactionRepo, never()).save(any());
     }

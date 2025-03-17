@@ -106,7 +106,7 @@ public class ControllerServiceTest {
         when(userService.getUserByUsername(anyString())).thenReturn(user1);
         doNothing().when(userService).updateBalances(any(), any(), any(Double.class));
         when(transactionService.addTransaction(
-                any(), any(), anyString(), any(Double.class))).thenReturn(new Transaction());
+                any(), any(), anyString(), any(Double.class), any(Double.class))).thenReturn(new Transaction());
 
         Transaction transaction = controllerService.transfer(
                 "senderUsername",
@@ -117,7 +117,7 @@ public class ControllerServiceTest {
         assertNotNull(transaction);
         verify(userService, times(2)).getUserByUsername(anyString());
         verify(userService).updateBalances(any(), any(), any(Double.class));
-        verify(transactionService).addTransaction(any(), any(), anyString(), any(Double.class));
+        verify(transactionService).addTransaction(any(), any(), anyString(), any(Double.class), any(Double.class));
 
     }
 
@@ -136,7 +136,7 @@ public class ControllerServiceTest {
 
         verify(userService, times(2)).getUserByUsername(anyString());
         verify(userService, never()).updateBalances(any(), any(), any(Double.class));
-        verify(transactionService, never()).addTransaction(any(), any(), anyString(), any(Double.class));
+        verify(transactionService, never()).addTransaction(any(), any(), anyString(), any(Double.class), any(Double.class));
     }
 
     @Test

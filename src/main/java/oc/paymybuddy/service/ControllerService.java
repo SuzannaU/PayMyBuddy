@@ -55,10 +55,12 @@ public class ControllerService {
 
         User sender = userService.getUserByUsername(senderUsername);
         User receiver = userService.getUserByUsername(receiverUsername);
-        double amount = Double.parseDouble(stringAmount);
-        if (sender.getBalance() >= amount) {
-            Transaction transaction = transactionService.addTransaction(sender, receiver, description, amount);
-            userService.updateBalances(sender, receiver, amount);
+        double netAmount = Double.parseDouble(stringAmount);
+        double fee = transactionService.calculateFee(netAmount);
+        if (sender.getBalance() >= netAmount + fee) {
+            Transaction transaction = transactionService.addTransaction(sender, receiver, description, netAmount, fee);
+            //collectFee(fee) method to be implemented in V1
+            userService.updateBalances(sender, receiver, netAmount);
             return transaction;
         }
         throw new UnsufficientFundsException();

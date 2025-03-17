@@ -36,6 +36,7 @@ public class Transaction {
 
     private String description;
     private double amount;
+    private double fee;
 
     @JsonIgnore
     public List<User> getUsers() {
@@ -46,38 +47,55 @@ public class Transaction {
     }
 
     public int getId() {
+
         return id;
     }
 
     public User getSender() {
+
         return sender;
     }
 
     public void setSender(User sender) {
+
         this.sender = sender;
     }
 
     public User getReceiver() {
+
         return receiver;
     }
 
     public void setReceiver(User receiver) {
+
         this.receiver = receiver;
     }
 
     public String getDescription() {
+
         return description;
     }
 
     public void setDescription(String description) {
+
         this.description = description;
     }
 
     public double getAmount() {
+
         return amount;
     }
 
     public void setAmount(double amount) {
+
         this.amount = amount;
+    }
+
+    public double getFee() {
+        return fee;
+    }
+
+    public void setFee(double fee) {
+        this.fee = fee;
     }
 }
