@@ -1,12 +1,8 @@
 package oc.paymybuddy.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.DynamicUpdate;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "transactions")
@@ -37,14 +33,6 @@ public class Transaction {
     private String description;
     private double amount;
     private double fee;
-
-    @JsonIgnore
-    public List<User> getUsers() {
-        List<User> users = new ArrayList<>();
-        users.add(sender);
-        users.add(receiver);
-        return users;
-    }
 
     public int getId() {
 

@@ -3,7 +3,6 @@ package oc.paymybuddy.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import org.hibernate.annotations.DynamicUpdate;
@@ -32,6 +31,14 @@ public class User {
     private String email;
 
     private double balance;
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    @JsonBackReference("userRoles")
+    private List<UserRole> userRoles;
 
     @OneToMany(
             mappedBy = "sender",
@@ -68,14 +75,6 @@ public class User {
     @JsonBackReference("invitedUserReference")
     private List<Relation> invitedRelations;
 
-    @OneToMany(
-            mappedBy = "user",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
-    )
-    @JsonManagedReference("userRoles")
-    private List<UserRole> userRoles;
-
     @JsonIgnore
     public List<Relation> getRelations() {
         List<Relation> relations = new ArrayList<>();
@@ -90,36 +89,6 @@ public class User {
         transactions.addAll(sentTransactions);
         transactions.addAll(receivedTransactions);
         return transactions;
-    }
-
-    public void addSentTransactions(Transaction t) {
-        sentTransactions.add(t);
-        t.setSender(this);
-    }
-
-    public void addReceivedTransactions(Transaction t) {
-        receivedTransactions.add(t);
-        t.setReceiver(this);
-    }
-
-    public void addInvitingRelation(Relation r) {
-        invitingRelations.add(r);
-        r.setInvitingUser(this);
-    }
-
-    public void addInvitedTransactions(Relation r) {
-        invitedRelations.add(r);
-        r.setInvitedUser(this);
-    }
-
-    public void removeInvitingRelation(Relation r) {
-        invitingRelations.remove(r);
-        r.setInvitingUser(null);
-    }
-
-    public void removeInvitedTransactions(Relation r) {
-        invitedRelations.remove(r);
-        r.setInvitedUser(null);
     }
 
     public int getId() {

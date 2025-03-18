@@ -8,6 +8,7 @@ import oc.paymybuddy.repository.RelationRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -22,6 +23,14 @@ public class RelationService {
         this.relationRepo = relationRepo;
     }
 
+    /**
+     * Creates a new relation and calls repo to save it
+     *
+     * @param invitingUser the inviting user
+     * @param invitedUser  the invited user
+     * @return the saved relation
+     * @throws ExistingRelationException
+     */
     public Relation addRelation(User invitingUser, User invitedUser) {
         Set<String> existingRelations = getRelationsUsernamesByUser(invitingUser);
         if (existingRelations.contains(invitedUser.getUsername())) {
@@ -32,11 +41,17 @@ public class RelationService {
         relation.setRelationId(new RelationId(invitingUser.getId(), invitedUser.getId()));
         relation.setInvitingUser(invitingUser);
         relation.setInvitedUser(invitedUser);
-        logger.debug("Adding relation between {} and {}",
+        logger.info("Adding relation between {} and {}",
                 relation.getInvitingUser().getUsername(), relation.getInvitedUser().getUsername());
         return relationRepo.save(relation);
     }
 
+    /**
+     * Calls repo to get relations usernames by user.
+     *
+     * @param user the user
+     * @return the relations usernames for that user
+     */
     public Set<String> getRelationsUsernamesByUser(User user) {
         return relationRepo.findAllByInvitingUserOrInvitedUser(user, user).stream()
                 .map(r -> r.getUsers())

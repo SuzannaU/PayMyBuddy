@@ -20,17 +20,31 @@ public class UserRoleService {
         this.userRoleRepo = userRoleRepo;
     }
 
+    /**
+     * Calls repo to get all the UserRole of one User
+     * Called in UserDetailsService to determine the roles of a User
+     *
+     * @param user the User
+     * @return List of the UserRoles
+     */
     public List<UserRole> getAllUserRolesByUser(User user) {
 
         return userRoleRepo.findAllByUser(user);
     }
 
+    /**
+     * Creates a new UserRole and calls repo to save it
+     * Called in ControllerService when creating a new User
+     *
+     * @param user the new User
+     * @param role the Role that will be assigned to it
+     */
     public void assignRoleToUser(User user, Role role) {
-        logger.debug("ControllerService/assignRoleToUser method called");
-        UserRole userRole = new UserRole(new UserRoleId(user.getId(),role.getRoleName()));
+        UserRole userRole = new UserRole();
+        userRole.setUserRoleId(new UserRoleId(user.getId(), role.getRoleName()));
         userRole.setUser(user);
         userRole.setRole(role);
-        logger.debug("role name {}, user name {}",
+        logger.info("role name {} has been assigned to username {}",
                 userRole.getRole().getRoleName(),
                 userRole.getUser().getUsername());
         userRoleRepo.save(userRole);

@@ -21,6 +21,17 @@ public class TransactionService {
         this.transactionRepo = transactionRepo;
     }
 
+    /**
+     * Creates a new Transaction and calls repo to save it
+     *
+     * @param sender      the user that sent the transfer
+     * @param receiver    the user that will receive the transfer
+     * @param description description of the transaction
+     * @param amount      the net amount of the transfer
+     * @param fee         for now always 0, to be implemented in V1
+     * @return the saved Transaction
+     * @throws TooLongException for a description that exceeds 250 characters
+     */
     public Transaction addTransaction(
             User sender,
             User receiver,

@@ -14,6 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * This Service is called by the Controllers and its responsibility is to call Model Services
+ * <p>
+ * The methods that cause a change in the DB are all Transactional, with inner methods running in the same Transaction.
+ * Rollbacks will be made in case of any Exception.
+ */
 @Service
 public class ControllerService {
     private static final Logger logger = LoggerFactory.getLogger(ControllerService.class);
@@ -35,6 +41,14 @@ public class ControllerService {
         this.roleService = roleService;
     }
 
+    /**
+     * Calls UserService to recover Users and RelationService to create the new relation
+     *
+     * @param invitingUsername the inviting username
+     * @param invitedUserEmail the invited user email
+     * @return the saved relation
+     * @throws UserNotFoundException in case the invited user email doesn't exist
+     */
     @Transactional(rollbackFor = Exception.class)
     public Relation addRelation(String invitingUsername, String invitedUserEmail) {
 
@@ -46,6 +60,17 @@ public class ControllerService {
         throw new UserNotFoundException();
     }
 
+    /**
+     * Performs the transfer by calling the addTransaction method and the updateBalances method
+     * In V1, the fee will be collected here
+     *
+     * @param senderUsername   the sender username
+     * @param receiverUsername the receiver username
+     * @param description      the description
+     * @param stringAmount     the amount as String
+     * @return the saved transaction
+     * @throws UnsufficientFundsException in case the sender doesn't have enough funds for the transfer
+     */
     @Transactional(rollbackFor = Exception.class)
     public Transaction transfer(
             String senderUsername,
@@ -66,44 +91,88 @@ public class ControllerService {
         throw new UnsufficientFundsException();
     }
 
-    public User getUserByUsername(String username) {
-
-        return userService.getUserByUsername(username);
-    }
-
+    /**
+     * Registers a new User by calling register method and assignRole method.
+     *
+     * @param user the new user
+     * @return the saved user
+     */
     @Transactional(rollbackFor = Exception.class)
     public User registerUser(User user) {
-        logger.debug("registerUser method called");
         User registeredUser = userService.registerUser(user);
         userRoleService.assignRoleToUser(user, roleService.getRoleByRoleName(Roles.USER.name()));
         return registeredUser;
     }
 
+    /**
+     * Calls service to update the username of a user.
+     *
+     * @param currentUsername the current username
+     * @param newUsername     the new username
+     * @return the saved user
+     */
     @Transactional(rollbackFor = Exception.class)
     public User updateUsername(String currentUsername, String newUsername) {
-        logger.debug("ControllerService/updateUsername method called");
         return userService.updateUsername(currentUsername, newUsername);
     }
 
+    /**
+     * Calls service to update the email of a user.
+     *
+     * @param currentUsername the current username
+     * @param newEmail        the new email
+     * @return the saved user
+     */
     @Transactional(rollbackFor = Exception.class)
     public User updateEmail(String currentUsername, String newEmail) {
-        logger.debug("ControllerService/updateEmail method called");
         return userService.updateEmail(currentUsername, newEmail);
     }
 
+    /**
+     * Calls service to update the password of a user.
+     *
+     * @param currentUsername the current username
+     * @param newPassword     the new password
+     * @return the saved user
+     */
     @Transactional(rollbackFor = Exception.class)
     public User updatePassword(String currentUsername, String newPassword) {
-        logger.debug("ControllerService/updatePassword method called");
         return userService.updatePassword(currentUsername, newPassword);
     }
 
+    /**
+     * Calls services to get relations usernames by username.
+     * Used in TransactionController to recover relations of a user
+     *
+     * @param username the username
+     * @return the relations usernames for that username
+     */
     public Set<String> getRelationsUsernamesByUsername(String username) {
         User user = userService.getUserByUsername(username);
         return relationService.getRelationsUsernamesByUser(user);
     }
 
+    /**
+     * Calls services to get sent transactions by username.
+     * Used in TransactionController to recover the transfers made by a user
+     *
+     * @param username the username
+     * @return transactions sent by that username
+     */
     public List<Transaction> getSentTransactionsByUsername(String username) {
         User user = userService.getUserByUsername(username);
         return transactionService.getSentTransactionsByUser(user);
+    }
+
+    /**
+     * Calls service to get user by username.
+     * Used in UserController to recover Users from Principal usernames.
+     *
+     * @param username the username
+     * @return the user by username
+     */
+    public User getUserByUsername(String username) {
+
+        return userService.getUserByUsername(username);
     }
 }
