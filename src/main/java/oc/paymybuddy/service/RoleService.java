@@ -24,7 +24,6 @@ public class RoleService {
      * @return the corresponding Role
      */
     public Role getRoleByRoleName(String roleName) {
-        logger.debug("RoleService/getRoleByRoleName method called");
         return roleRepo.findByRoleName(roleName);
     }
 }

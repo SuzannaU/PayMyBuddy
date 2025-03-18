@@ -29,7 +29,7 @@ public class TransactionServiceTest {
     private User user2;
 
     @BeforeEach
-    private void init() {
+    public void setup() {
         user1 = new User();
         user2 = new User();
     }

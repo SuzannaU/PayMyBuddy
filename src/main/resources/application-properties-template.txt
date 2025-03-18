@@ -1,12 +1,12 @@
 
-###### THIS IS ONLY A TEMPLATE. A PROPER APPLICATION.PROPERTIES FILE IS NEEDED ######
+###### THIS IS ONLY A TEMPLATE. A PROPER application.properties FILE IS NEEDED ######
 
 
 The template below can be used to set up the application.properties file necessary for application configuration,
 especially database connection.
 Database URL, Username and password need to be inserted in the designated fields.
 
-The file should be named application.properties and either be placed in the scr/resources directory,
+The file should be named application.properties and either be placed in the scr/resources,
 or for more security in a separate directory i.e. PayMyBuddy/config
 
 

@@ -38,7 +38,7 @@ public class ControllerServiceTest {
     private User user2;
 
     @BeforeEach
-    private void init() {
+    public void setup() {
         user1 = new User();
         user1.setUsername("user1");
         user2 = new User();

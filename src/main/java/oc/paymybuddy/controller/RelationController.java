@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * This controller handles requests related to Relations
+ */
 @Controller
 public class RelationController {
     private static final Logger logger = LoggerFactory.getLogger(RelationController.class);
@@ -22,16 +25,30 @@ public class RelationController {
         this.controllerService = controllerService;
     }
 
-
+    /**
+     * Returns add-relation page, with model to specify the current URL
+     * @param request used to retrieve the current URL
+     * @param model used to inject the current URL (for active link in navigation)
+     * @return add-relation template
+     */
     @GetMapping("/add-relation")
     public String getAddRelation(HttpServletRequest request, Model model) {
         model.addAttribute("currentUrl", request.getRequestURI());
         return "add-relation";
     }
 
+    /**
+     * Calls ControllerService to initiate the creation of a new Relation
+     * Catches Exceptions and reloads page with error messages
+     *
+     * @param invitedUserEmail retrieved as RequestParam
+     * @param request used to retrieve the current URL as well as the Principal
+     * @param model used to inject the current URL in case of reload
+     * @return redirection to /add-relation
+     */
     @PostMapping("/add-relation")
     public String addRelation(@RequestParam String invitedUserEmail,Model model, HttpServletRequest request) {
-        logger.debug("POST addRelation");
+        logger.info("POST addRelation");
         String invitingUsername = request.getUserPrincipal().getName();
         try {
             controllerService.addRelation(invitingUsername, invitedUserEmail);

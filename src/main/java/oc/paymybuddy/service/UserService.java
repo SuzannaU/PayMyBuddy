@@ -33,7 +33,6 @@ public class UserService {
      * @throws TooLongPasswordException
      */
     public User registerUser(User user) {
-        logger.debug("registerUser method called");
         if (isAnExistingUsername(user.getUsername())) {
             throw new ExistingUsernameException();
         } else if (isAnExistingEmail(user.getEmail())) {

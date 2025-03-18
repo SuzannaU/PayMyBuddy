@@ -57,6 +57,7 @@ public class ControllerService {
             User invitedUser = userService.getUserByEmail(invitedUserEmail);
             return relationService.addRelation(invitingUser, invitedUser);
         }
+        logger.error("User not found with email {}", invitedUserEmail);
         throw new UserNotFoundException();
     }
 
@@ -88,6 +89,7 @@ public class ControllerService {
             userService.updateBalances(sender, receiver, netAmount);
             return transaction;
         }
+        logger.error("Funds are not enough for this transfer");
         throw new UnsufficientFundsException();
     }
 

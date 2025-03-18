@@ -31,6 +31,13 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.userRoleService = userRoleService;
     }
 
+    /**
+     * Users are logged in with email (and not username)
+     * Method is used by Spring Security during login process
+     * @param email the email identifying the user whose data is required.
+     * @return UserDetails
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 

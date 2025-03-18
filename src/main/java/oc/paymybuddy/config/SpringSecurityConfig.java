@@ -36,7 +36,7 @@ public class SpringSecurityConfig {
                 .formLogin(form->form
                         .loginPage("/login")
                         .loginProcessingUrl("/perform-login")
-                        .defaultSuccessUrl("/transfer")
+                        .defaultSuccessUrl("/transfer", true)
                         .failureUrl("/login?error=true")
                         .permitAll())
                 .build();

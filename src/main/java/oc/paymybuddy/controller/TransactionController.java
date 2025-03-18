@@ -11,6 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Handles requests related to Transactions
+ */
 @Controller
 public class TransactionController {
     private static final Logger logger = LoggerFactory.getLogger(TransactionController.class);
@@ -21,7 +24,12 @@ public class TransactionController {
         this.controllerService = controllerService;
     }
 
-
+    /**
+     * Returns transfer page, with model to specify the current URL
+     * @param request used to retrieve the current URL as well as the Principal
+     * @param model used to inject the current URL (for active link in navigation)
+     * @return transfer template
+     */
     @GetMapping("/transfer")
     public String getTransfer(HttpServletRequest request, Model model) {
         String senderUsername = request.getUserPrincipal().getName();
@@ -29,6 +37,17 @@ public class TransactionController {
         return "transfer";
     }
 
+    /**
+     * Calls ControllerService to initiate the creation of a new Transaction
+     * Catches Exceptions and reloads page with error messages
+     *
+     * @param receiver retrieved as RequestParam
+     * @param description retrieved as RequestParam
+     * @param amount Retrieved as RequestParam
+     * @param request used to retrieve the current URL as well as the Principal
+     * @param model used to inject the current URL in case of reload
+     * @return redirection to /transfer
+     */
     @PostMapping("/transfer")
     public String transfer(
             @RequestParam String receiver,
@@ -36,7 +55,7 @@ public class TransactionController {
             @RequestParam String amount,
             Model model,
             HttpServletRequest request) {
-        logger.debug("POST transfer");
+        logger.info("POST transfer");
         String senderUsername = request.getUserPrincipal().getName();
         try {
             controllerService.transfer(senderUsername, receiver, description, amount);
@@ -54,6 +73,14 @@ public class TransactionController {
         return "redirect:/transfer";
     }
 
+    /**
+     * Sets up the transfer view for fresh loads as well as reloads
+     * Calls ControllerService to retrieve transactions and relations to be displayed on the page
+     *
+     * @param request used to retrieve the current URL
+     * @param model used to inject the current URL (for active link in navigation)
+     * @param senderUsername username to which transactions and relations are related
+     */
     private void setUpView(HttpServletRequest request, Model model, String senderUsername) {
         Transaction transaction = new Transaction();
         var transactions = controllerService.getSentTransactionsByUsername(senderUsername);

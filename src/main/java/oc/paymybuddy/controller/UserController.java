@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * This Controller handles requests related to Users
+ */
 @Controller
 public class UserController {
 
@@ -32,6 +35,12 @@ public class UserController {
         return "login";
     }
 
+    /**
+     * Returns register page, with model corresponding to User class
+     *
+     * @param model for a User object
+     * @return register template
+     */
     @GetMapping("/register")
     public String getRegister(Model model) {
         User user = new User();
@@ -39,9 +48,17 @@ public class UserController {
         return "register";
     }
 
+    /**
+     * Calls ControllerService to initiate the creation of a new User
+     * Catches Exceptions and reloads page with error messages
+     *
+     * @param user   as ModelAttribute, with Validation
+     * @param result to add error message in case of Validation errors, or Exceptions
+     * @return redirects to /login
+     */
     @PostMapping("/register")
     public String register(@Valid @ModelAttribute("user") User user, BindingResult result) {
-        logger.debug("POST register");
+        logger.info("POST register");
         if (result.hasErrors()) {
             return "register";
         }
@@ -76,6 +93,13 @@ public class UserController {
         return "redirect:/login";
     }
 
+    /**
+     * Returns the profile page, with model to specify the current URL
+     *
+     * @param request used to retrieve the current URL as well as the Principal
+     * @param model   used to inject the current URL (for active link in navigation)
+     * @return profile template
+     */
     @GetMapping("/profile")
     public String getProfile(HttpServletRequest request, Model model) {
         String currentUsername = request.getUserPrincipal().getName();
@@ -85,6 +109,15 @@ public class UserController {
         return "profile";
     }
 
+    /**
+     * Calls ControllerService to initiate the update of the username
+     * Catches Exceptions and reloads the page with Error messages
+     *
+     * @param username retrieved as RequestParam
+     * @param request used to retrieve the current URL as well as the Principal
+     * @param model   used to inject the current URL
+     * @return redirect to /profile
+     */
     @PostMapping("/update-username")
     public String updateUsername(@RequestParam String username, Model model, HttpServletRequest request) {
         logger.debug("POST update-username");
@@ -109,6 +142,15 @@ public class UserController {
         return "redirect:/profile";
     }
 
+    /**
+     * Calls ControllerService to initiate the update of the email
+     * Catches Exceptions and reloads the page with Error messages
+     *
+     * @param email retrieved as RequestParam
+     * @param request used to retrieve the current URL as well as the Principal
+     * @param model   used to inject the current URL
+     * @return redirect to /profile
+     */
     @PostMapping("/update-email")
     public String updateEmail(@RequestParam String email, Model model, HttpServletRequest request) {
         logger.debug("POST update-email");
@@ -132,7 +174,15 @@ public class UserController {
         }
         return "redirect:/profile";
     }
-
+    /**
+     * Calls ControllerService to initiate the update of the password
+     * Catches Exceptions and reloads the page with Error messages
+     *
+     * @param password retrieved as RequestParam
+     * @param request used to retrieve the current URL as well as the Principal
+     * @param model   used to inject the current URL
+     * @return redirect to /profile
+     */
     @PostMapping("/update-password")
     public String updatePassword(@RequestParam String password, Model model, HttpServletRequest request) {
         logger.debug("POST update-password");

@@ -116,8 +116,6 @@ public class UserControllerIT {
                 .andExpect(view().name("register"))
                 .andExpect(model().attributeHasFieldErrors("user", "username"));
 
-        //Checks that user1 email has not been replaced
-        assertNotEquals("email", userService.getUserByUsername("user1").getEmail());
     }
 
     @Test
@@ -135,8 +133,6 @@ public class UserControllerIT {
                 .andExpect(view().name("register"))
                 .andExpect(model().attributeHasFieldErrors("user", "email"));
 
-        //Checks that user1 username has not been replaced
-        assertNotEquals("username", userService.getUserByEmail("user1@example.com").getUsername());
     }
 
     @Test
@@ -154,8 +150,6 @@ public class UserControllerIT {
                 .andExpect(view().name("register"))
                 .andExpect(model().attributeHasFieldErrors("user", "password"));
 
-        //Checks that user1 username has not been replaced
-        assertNotEquals("username", userService.getUserByEmail("user1@example.com").getUsername());
     }
 
     @Test

@@ -31,7 +31,7 @@ public class RelationServiceTest {
     private User anotherUser;
 
     @BeforeEach
-    private void init() {
+    public void setup() {
         invitingUser = new User();
         invitingUser.setUsername("invitingUser");
         invitedUser = new User();

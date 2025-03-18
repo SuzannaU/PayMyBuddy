@@ -22,7 +22,7 @@ public class TransactionService {
     }
 
     /**
-     * Creates a new Transaction and calls repo to save it
+     * Creates a new Transaction object and calls repo to save it
      *
      * @param sender      the user that sent the transfer
      * @param receiver    the user that will receive the transfer
