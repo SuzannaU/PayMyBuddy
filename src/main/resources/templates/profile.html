@@ -21,7 +21,7 @@
                                     <label for="username">Username</label>
                                 </div>
                                 <div class="col input">
-                                    <input type="text" id="username" name="username" class="input"
+                                    <input type="text" id="username" name="username" class="input" required
                                            th:placeholder="${currentUser.getUsername()}"/>
                                     <button type="submit" class="btn p-0 border-0 bg-transparent">
                                         <i class="bi bi-chevron-right" title="Modifier le nom d'utilisateur"></i>
@@ -40,7 +40,7 @@
                                     <label for="email">Mail</label>
                                 </div>
                                 <div class="col input">
-                                    <input type="text" id="email" name="email" class="input"
+                                    <input type="text" id="email" name="email" class="input" required
                                            th:placeholder="${currentUser.getEmail()}"/>
                                     <button type="submit" class="btn p-0 border-0 bg-transparent">
                                         <i class="bi bi-chevron-right" title="Modifier l'email"></i>
@@ -64,7 +64,7 @@
                                         <label for="password">Mot de passe</label>
                                     </div>
                                     <div class="col input">
-                                        <input type="password" id="password" name="password" class="input"
+                                        <input type="password" id="password" name="password" class="input" required
                                                placeholder="mot de passe"/>
                                     </div>
                                     <div class="col-12 text-danger" th:if="${passwordError}">
